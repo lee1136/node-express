@@ -52,6 +52,7 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 document.getElementById('uploadForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
+    const companyName = document.getElementById('companyName').value;
     const productNumber = document.getElementById('productNumber').value;
     const type = document.getElementById('type').value;
     const size = document.getElementById('size').value;
@@ -77,7 +78,8 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         const thumbnailURL = mediaFiles.find(media => media.fileName === selectedThumbnail.name)?.url || mediaFiles[0].url;
         const postId = `post_${Date.now()}`;
         setDoc(doc(db, "posts", postId), {
-            productNumber,
+            companyName,  // 회사명 저장
+            productNumber,  // 품번 저장
             type,
             size: `${size} ${sizeUnit}`,
             weight: `${weight}g`,
