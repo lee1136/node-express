@@ -119,7 +119,20 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
 
             await Promise.all(deletePromises);
             alert('게시물이 삭제되었습니다.');
-            window.location.href = '/dashboard.html';  // 삭제 후 대시보드로 이동
+            
+            // 삭제 완료 메시지 후 대시보드로 이동할 버튼 표시
+            const postDeletedMessage = document.createElement('div');
+            postDeletedMessage.innerHTML = `
+                <p>게시물이 삭제되었습니다.</p>
+                <button id="goBackBtn">대시보드로 돌아가기</button>
+            `;
+            document.body.appendChild(postDeletedMessage);
+
+            // "대시보드로 돌아가기" 버튼 클릭 시 대시보드로 이동
+            document.getElementById('goBackBtn').addEventListener('click', () => {
+                window.location.href = '/dashboard.html';
+            });
+
         } catch (error) {
             console.error('게시물 삭제 중 오류:', error);
         }
