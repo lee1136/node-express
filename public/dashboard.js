@@ -3,7 +3,7 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 로그인된 사용자의 역할 확인 (관리자면 업로드 버튼 보이기)
+// 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
@@ -13,6 +13,7 @@ onAuthStateChanged(auth, (user) => {
                 const userRole = docSnap.data().role;
                 if (userRole === 'admin') {
                     document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
+                    document.getElementById('signupBtn').style.display = 'block'; // 관리자에게만 회원가입 버튼 표시
                 }
             }
         }).catch((error) => {
@@ -28,6 +29,11 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
     window.location.href = '/upload.html';  // 업로드 페이지로 이동
 });
 
+// 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+document.getElementById('signupBtn').addEventListener('click', () => {
+    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
+});
+
 // Firestore에서 게시물 가져오기
 async function loadPosts() {
     const postList = document.getElementById('postList');
@@ -37,7 +43,7 @@ async function loadPosts() {
         const querySnapshot = await getDocs(collection(db, 'posts'));
         querySnapshot.forEach((doc) => {
             const postData = doc.data();
-            const postElement = createPostElement(postData, doc.id); // 게시물 ID를 전달
+            const postElement = createPostElement(postData);
             postList.appendChild(postElement);
         });
     } catch (error) {
@@ -46,7 +52,7 @@ async function loadPosts() {
 }
 
 // 게시물 요소 생성 함수
-function createPostElement(postData, postId) {
+function createPostElement(postData) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
@@ -56,7 +62,7 @@ function createPostElement(postData, postId) {
 
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
-        window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동, postId를 쿼리 파라미터로 전달
+        window.location.href = `/detail.html?postId=${postData.id}`; // 상세 페이지로 이동
     });
 
     postDiv.appendChild(img);
