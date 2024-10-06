@@ -25,7 +25,7 @@ async function loadPostDetail() {
             postDetail.innerHTML = `
                 <video src="${postData.media[0].url}" class="post-video" controls></video> <!-- 중앙에 비디오 -->
                 <div class="image-gallery">
-                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}">`).join('')}
+                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
                 <div class="post-info">
                     <h2>${postData.productNumber}</h2>
@@ -35,6 +35,13 @@ async function loadPostDetail() {
                     <p>추가 내용: ${postData.additionalContent}</p>
                 </div>
             `;
+
+            // 이미지 클릭 시 모달 열기
+            document.querySelectorAll('.gallery-image').forEach(image => {
+                image.addEventListener('click', () => {
+                    openModal(image.src, postData.productNumber);
+                });
+            });
         } else {
             postDetail.innerHTML = '<p>게시물을 찾을 수 없습니다.</p>';
         }
@@ -43,6 +50,22 @@ async function loadPostDetail() {
         postDetail.innerHTML = '<p>게시물 정보를 불러오는 데 오류가 발생했습니다.</p>';
     }
 }
+
+// 모달 열기
+function openModal(imageSrc, productNumber) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const captionText = document.getElementById('caption');
+    
+    modal.style.display = "block"; // 모달 표시
+    modalImage.src = imageSrc; // 모달 안의 이미지 소스 설정
+    captionText.innerHTML = productNumber; // 캡션 설정
+}
+
+// 모달 닫기
+document.querySelector('.close').addEventListener('click', () => {
+    document.getElementById('imageModal').style.display = "none"; // 모달 숨기기
+});
 
 // 페이지 로드 시 게시물 상세 정보 불러오기
 document.addEventListener('DOMContentLoaded', loadPostDetail);
