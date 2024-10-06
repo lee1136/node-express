@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/fir
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
-    window.history.back();  // 이전 페이지로 이동
+    window.location.href = '/dashboard.html';  // 홈(dashboard.html)으로 이동
 });
 
 // 수정하기 버튼 클릭 시 수정 페이지로 이동
