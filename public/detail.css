@@ -72,19 +72,20 @@ h1 {
 
 /* 이미지 갤러리 스타일 */
 .image-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));  /* 최소 120px, 최대 6개씩 가로로 배치 */
+    display: flex;
+    flex-wrap: wrap;  /* 줄이 넘어갈 경우 자동으로 줄바꿈 */
+    justify-content: center;  /* 이미지 중앙 정렬 */
     gap: 10px;  /* 이미지 간격 */
-    justify-items: center;  /* 이미지 중앙 정렬 */
 }
 
 .image-gallery img {
-    width: 100%;
-    padding-top: 100%;  /* 정사각형 비율 유지 */
-    object-fit: cover;  /* 이미지가 정사각형을 꽉 채우도록 설정 */
+    width: calc(100% / 6 - 10px);  /* 최대 6개씩 가로 배치되도록 계산 */
+    height: auto;
+    object-fit: cover;  /* 정사각형 유지 */
     border-radius: 5px;
     cursor: pointer;
 }
+
 
 /* 모달 스타일 */
 .modal {
