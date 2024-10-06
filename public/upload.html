@@ -14,37 +14,51 @@
 
     <section id="uploadSection">
         <form id="uploadForm">
-            <!-- 미디어 업로드 및 미리보기 -->
+            <!-- 미디어 미리보기 -->
             <div id="mediaPreview">
-                <!-- 미디어 미리보기가 여기에 표시됩니다 -->
+                <!-- 미리보기가 여기에 표시됩니다 -->
             </div>
-            
+
             <label for="fileInput">파일 선택:</label>
             <input type="file" id="fileInput" multiple accept="image/*,video/*">
 
-            <label for="productNumber">품번:</label>
-            <input type="text" id="productNumber" required>
+            <div class="half-width">
+                <label for="productNumber">품번:</label>
+                <input type="text" id="productNumber" required>
+            </div>
 
-            <label for="type">종류:</label>
-            <select id="type" required>
-                <option value="14K">14K</option>
-                <option value="18K">18K</option>
-                <option value="24K">24K</option>
-                <option value="925">925</option>
-            </select>
+            <div class="half-width">
+                <label for="type">종류:</label>
+                <select id="type" required>
+                    <option value="14K">14K</option>
+                    <option value="18K">18K</option>
+                    <option value="24K">24K</option>
+                    <option value="925">925</option>
+                </select>
+            </div>
 
-            <label for="size">사이즈:</label>
-            <input type="number" id="size" step="0.01" required>
-            <select id="sizeUnit">
-                <option value="cm">cm</option>
-                <option value="호">호</option>
-            </select>
+            <div class="half-width">
+                <label for="size">사이즈:</label>
+                <input type="number" id="size" step="0.01" required>
+            </div>
 
-            <label for="weight">중량:</label>
-            <input type="number" id="weight" step="0.01" required>g
+            <div class="half-width">
+                <label for="sizeUnit">단위:</label>
+                <select id="sizeUnit">
+                    <option value="cm">cm</option>
+                    <option value="호">호</option>
+                </select>
+            </div>
 
-            <label for="additionalContent">추가 내용:</label>
-            <textarea id="additionalContent" rows="4"></textarea>
+            <div class="half-width">
+                <label for="weight">중량:</label>
+                <input type="number" id="weight" step="0.01" required>g
+            </div>
+
+            <div class="full-width">
+                <label for="additionalContent">추가 내용:</label>
+                <textarea id="additionalContent" rows="4"></textarea>
+            </div>
 
             <button type="submit" id="submitBtn">업로드</button>
         </form>
