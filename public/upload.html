@@ -37,13 +37,16 @@
                 </select>
             </div>
 
-            <div class="half-width with-unit">
+            <div class="half-width">
                 <label for="size">사이즈:</label>
                 <input type="number" id="size" step="0.01" required>
-                <span>cm / 호</span> <!-- 단위 표시 -->
+                <select id="sizeUnit" required>
+                    <option value="cm">cm</option>
+                    <option value="호">호</option>
+                </select>
             </div>
 
-            <div class="half-width with-unit">
+            <div class="half-width">
                 <label for="weight">중량:</label>
                 <input type="number" id="weight" step="0.01" required>
                 <span>g</span> <!-- g 단위 표시 -->
