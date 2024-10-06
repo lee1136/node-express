@@ -21,13 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
     // 회원가입 처리
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const userId = document.getElementById('userId').value;
+            let userId = document.getElementById('userId').value;
             const password = document.getElementById('password').value;
+
+            // 유효한 이메일 형식으로 변환 (ID를 이메일처럼 사용)
+            if (!userId.includes('@')) {
+                userId += '@example.com'; // ID에 기본 도메인 추가
+            }
 
             createUserWithEmailAndPassword(auth, userId, password)
                 .then((userCredential) => {
@@ -38,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+});
+
     
     // 로그아웃 처리
     const logoutBtn = document.getElementById('logoutBtn');
