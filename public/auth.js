@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { setDoc, doc, getDocs, collection, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
                     <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}">탈퇴</button> <!-- 탈퇴 버튼 추가 -->
                     <hr>
                 </div>
             `;
@@ -47,6 +48,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } catch (error) {
                     console.error('역할 수정 오류:', error);
                     alert('역할 수정 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
+        // 탈퇴 버튼 클릭 이벤트
+        document.querySelectorAll('.deleteUserBtn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const userId = e.target.getAttribute('data-user-id');
+                const confirmDelete = confirm('정말로 이 회원을 탈퇴시키겠습니까?');
+
+                if (confirmDelete) {
+                    try {
+                        // Firestore에서 사용자 정보 삭제
+                        await deleteDoc(doc(db, 'users', userId));
+                        alert('회원이 탈퇴되었습니다.');
+                        loadAllUsers();  // 삭제 후 사용자 목록 갱신
+                    } catch (error) {
+                        console.error('회원 탈퇴 중 오류:', error);
+                        alert('회원 탈퇴 중 오류가 발생했습니다.');
+                    }
                 }
             });
         });
