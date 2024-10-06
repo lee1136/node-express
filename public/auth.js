@@ -56,20 +56,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.deleteUserBtn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const userId = e.target.getAttribute('data-user-id');
-                const userEmail = e.target.getAttribute('data-email');
-                const confirmDelete = confirm(`정말로 이 회원(${userEmail})을 탈퇴시키겠습니까?`);
+                const confirmDelete = confirm(`정말로 이 회원을 탈퇴시키겠습니까?`);
 
                 if (confirmDelete) {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
 
-                        // Firebase Authentication에서 사용자 정보 삭제
-                        const user = await getUserByEmail(userEmail);  // 이메일로 사용자 정보 가져오기
-                        await deleteUser(user);
-
-                        alert('회원이 탈퇴되었습니다.');
-                        loadAllUsers();  // 삭제 후 사용자 목록 갱신
+                        // Firebase Authentication에서 로그인된 사용자 삭제 (클라이언트 측 제한)
+                        if (auth.currentUser.uid === userId) {
+                            await deleteUser(auth.currentUser);
+                            alert('회원이 탈퇴되었습니다.');
+                            window.location.href = '/login.html'; // 탈퇴 후 로그인 페이지로 이동
+                        } else {
+                            alert('로그인된 사용자의 계정만 삭제할 수 있습니다.');
+                        }
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
                         alert('회원 탈퇴 중 오류가 발생했습니다.');
@@ -83,17 +84,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
     }
 });
-
-// Firebase Authentication에서 이메일로 사용자 정보 가져오기
-async function getUserByEmail(email) {
-    const userList = await auth.fetchSignInMethodsForEmail(email);
-    if (userList.length > 0) {
-        const userRecord = await auth.getUserByEmail(email);
-        return userRecord;
-    } else {
-        throw new Error('해당 이메일로 등록된 사용자를 찾을 수 없습니다.');
-    }
-}
 
 // 회원가입 처리
 const registerForm = document.getElementById('registerForm');
