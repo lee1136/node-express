@@ -3,7 +3,10 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } f
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', loadAllUsers);
+
+// 회원 목록을 불러오는 함수
+async function loadAllUsers() {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
     if (!allUsersInfoDiv) {
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
                     <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}">탈퇴</button> <!-- 탈퇴 버튼 추가 -->
+                    <button class="deleteUserBtn" data-user-id="${doc.id}">탈퇴</button>
                     <hr>
                 </div>
             `;
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('회원 정보 불러오기 오류:', error);
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
     }
-});
+}
 
 // 회원가입 처리
 const registerForm = document.getElementById('registerForm');
