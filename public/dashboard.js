@@ -13,7 +13,7 @@ onAuthStateChanged(auth, (user) => {
                 const userRole = docSnap.data().role;
                 if (userRole === 'admin') {
                     console.log("관리자입니다.");
-                    document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게 업로드 버튼 표시
+                    document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
                 } else {
                     console.log("일반 사용자입니다.");
                 }
