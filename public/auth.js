@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// 회원가입 처리
+// 회원가입 처리 및 중복 이메일 처리
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
@@ -104,7 +104,25 @@ if (registerForm) {
             window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
-                alert('이미 사용 중인 이메일입니다. 다른 이메일을 사용하세요.');
+                // 중복 이메일 처리: 이메일에 랜덤 문자열을 추가하여 중복 방지
+                email = addRandomStringToEmail(email);
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Firestore에 사용자 정보 저장
+                    await setDoc(doc(db, 'users', user.uid), {
+                        email: user.email,
+                        role: role  // 선택한 역할 저장
+                    });
+
+                    alert('중복된 이메일이 있어서, 새로운 이메일로 가입되었습니다.');
+                    window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
+                } catch (error) {
+                    console.error('회원가입 오류:', error);
+                    alert('회원가입 실패: ' + error.message);
+                }
             } else {
                 console.error('회원가입 오류:', error);
                 alert('회원가입 실패: ' + error.message);
@@ -151,6 +169,13 @@ function convertToEmailFormat(userId) {
         return userId + '@example.com';  // 기본 도메인을 추가
     }
     return userId;
+}
+
+// 이메일에 랜덤 문자열 추가 함수 (중복 이메일 해결)
+function addRandomStringToEmail(email) {
+    const randomString = Math.random().toString(36).substring(2, 10);  // 랜덤 문자열 생성
+    const emailParts = email.split('@');
+    return `${emailParts[0]}+${randomString}@${emailParts[1]}`;  // 예: user+randomString@example.com
 }
 
 // 회원 목록 불러오는 함수
