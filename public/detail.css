@@ -41,12 +41,6 @@ h1 {
     padding: 20px;
 }
 
-.post-image {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
 .post-video {
     width: 100%;  /* 동영상 폭 100% */
     max-width: 600px;  /* 최대 폭 600px */
@@ -80,8 +74,39 @@ h1 {
 }
 
 .image-gallery img {
-    width: 45%;  /* 이미지의 폭을 45%로 설정하여 두 개씩 가로로 배치 */
+    width: 30%;  /* 이미지의 폭을 30%로 설정하여 세 개씩 가로로 배치 */
     height: auto;  /* 높이는 자동 조정 */
     margin: 5px;  /* 이미지 간격 설정 */
     border-radius: 5px;
+    cursor: pointer;  /* 클릭 가능 표시 */
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 고정 위치 */
+    z-index: 999; /* 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 전체 화면 */
+    height: 100%; /* 전체 화면 */
+    overflow: auto; /* 스크롤 가능 */
+    background-color: rgba(0, 0, 0, 0.8); /* 반투명 배경 */
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%; /* 모달 안의 이미지 크기 */
+    max-width: 700px; /* 최대 너비 */
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }
