@@ -1,18 +1,16 @@
 const express = require('express');
-const path = require('path');
 const admin = require('firebase-admin');
-const serviceAccount = require('./path/to/serviceAccountKey.json'); // Firebase 서비스 계정 키 경로
+const path = require('path');
 
 // Firebase Admin SDK 초기화
+const serviceAccount = require('./path/to/serviceAccountKey.json'); // Firebase 서비스 계정 키 경로
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://your-database-name.firebaseio.com"  // Firebase 실시간 DB 또는 Firestore URL
+    databaseURL: "https://your-database-name.firebaseio.com"
 });
 
 // Express 애플리케이션 생성
 const app = express();
-
-// 포트 설정 (환경 변수에서 가져오거나 기본값 3000 사용)
 const PORT = process.env.PORT || 3000;
 
 // 정적 파일 제공 (public 폴더에서 CSS, JS, 이미지, HTML 제공)
