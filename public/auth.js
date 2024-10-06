@@ -1,12 +1,7 @@
 import { db } from "./firebase.js";
-import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 페이지가 로드되면 모든 회원 정보를 가져옴
-document.addEventListener('DOMContentLoaded', async () => {
-    loadAllUsers();  // 사용자 목록 로드
-});
-
-// 사용자 목록 불러오는 함수
+// 사용자 목록을 로드하고 화면에 표시하는 함수
 async function loadAllUsers() {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
@@ -148,3 +143,10 @@ if (logoutBtn) {
         window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
     });
 }
+
+// 페이지가 로드되면 모든 회원 정보를 가져옴 (관리자용 페이지일 때)
+document.addEventListener('DOMContentLoaded', async () => {
+    if (document.getElementById('allUsersInfo')) {
+        loadAllUsers();  // 사용자 목록 로드
+    }
+});
