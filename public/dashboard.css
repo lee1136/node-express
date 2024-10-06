@@ -1,119 +1,62 @@
-/* 기본 스타일 설정 */
+/* 전체 페이지 스타일 */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f9f9f9;
 }
 
 header {
-    background-color: #007bff;
+    background-color: #0047ab;
     color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 20px;
+    text-align: center;
 }
 
 h1 {
     margin: 0;
-    font-size: 24px;
 }
 
-/* 업로드 및 회원가입 버튼 스타일 */
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-#uploadBtn, #signupBtn {
-    display: none; /* 기본적으로 숨겨진 상태 */
-    margin-left: 10px;
-}
-
-#logoutBtn {
-    background-color: #dc3545;
-}
-
-#logoutBtn:hover {
-    background-color: #c82333;
-}
-
-/* 게시물 목록 스타일 */
 #postList {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 그리드 */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px, 최대 가로 크기에 맞게 */
+    gap: 10px;
     padding: 20px;
 }
 
-/* 각 게시물 스타일 */
 .post {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    cursor: pointer;
+    padding-top: 100%;  /* 정사각형 비율 유지 */
+    background-color: #f1f1f1;
     overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.2s ease;
+}
+
+.post img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .post:hover {
-    transform: scale(1.05); /* 마우스 오버 시 확대 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);  /* 마우스 오버 시 확대 */
 }
 
-/* 이미지 스타일 */
-.post img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover; /* 이미지를 잘라서 정사각형에 맞추기 */
-    transition: opacity 0.3s;
-}
-
-.post img:hover {
-    opacity: 0.8; /* 마우스 오버 시 이미지 살짝 어둡게 */
-}
-
-/* 페이지 내비게이션 버튼 */
-#prevBtn, #nextBtn {
-    background-color: #007bff;
+button {
+    background-color: #0047ab;
     color: white;
+    padding: 10px;
     border: none;
-    padding: 10px 15px;
-    margin: 10px;
-    font-size: 14px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-#prevBtn:hover, #nextBtn:hover {
-    background-color: #0056b3;
-}
-
-/* 페이지 내비게이션 버튼 감추기 (기본값) */
-#prevBtn, #nextBtn {
-    display: none;
-}
-
-/* 미디어 쿼리 */
-@media (max-width: 600px) {
-    #postList {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 작은 화면에서는 크기 조절 */
-    }
-
-    .post img {
-        height: 150px;
-    }
-
-    button {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
+button:hover {
+    background-color: #003580;
 }
