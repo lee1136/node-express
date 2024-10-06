@@ -7,27 +7,6 @@ import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/fi
 const postsPerPage = 10; // 한 페이지에 표시할 게시물 수
 let currentPage = 1;
 
-// 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const uid = user.uid;
-        const docRef = doc(db, "users", uid);
-        getDoc(docRef).then((docSnap) => {
-            if (docSnap.exists()) {
-                const userRole = docSnap.data().role;
-                if (userRole === 'admin') {
-                    document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
-                    document.getElementById('signupBtn').style.display = 'block'; // 관리자에게만 회원가입 버튼 표시
-                }
-            }
-        }).catch((error) => {
-            console.error("역할 확인 오류:", error);
-        });
-    } else {
-        window.location.href = '/login.html';  // 로그인되지 않은 경우 로그인 페이지로 이동
-    }
-});
-
 // Firestore에서 게시물 가져오기
 async function loadPosts(page) {
     const postList = document.getElementById('postList');
@@ -36,7 +15,7 @@ async function loadPosts(page) {
     try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
 
-        // 게시물이 없는 경우
+        // Firestore에서 게시물을 제대로 가져오지 못했을 때
         if (querySnapshot.empty) {
             console.log("게시물이 없습니다.");
             postList.innerHTML = "<p>게시물이 없습니다.</p>";
@@ -52,9 +31,7 @@ async function loadPosts(page) {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
                 console.log("게시물 데이터:", postData);  // 게시물 데이터를 출력하여 확인
-
                 const postElement = createPostElement(postData, doc.id);
-                console.log("생성된 게시물 요소:", postElement); // 생성된 HTML 요소를 확인
                 postList.appendChild(postElement);
             }
         });
@@ -107,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPosts(currentPage);
     });
 });
+
 
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
