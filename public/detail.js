@@ -23,7 +23,10 @@ async function loadPostDetail() {
             const postData = docSnap.data();
             // 상세 정보 표시
             postDetail.innerHTML = `
-                <img src="${postData.thumbnail}" alt="${postData.productNumber}" class="post-image">
+                <video src="${postData.media[0].url}" class="post-video" controls></video> <!-- 중앙에 비디오 -->
+                <div class="image-gallery">
+                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}">`).join('')}
+                </div>
                 <div class="post-info">
                     <h2>${postData.productNumber}</h2>
                     <p>종류: ${postData.type}</p>
