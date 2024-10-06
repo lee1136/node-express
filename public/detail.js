@@ -27,8 +27,10 @@ async function loadPostDetail() {
 
         if (docSnap.exists()) {
             const postData = docSnap.data();
-            // 품번 표시
-            document.getElementById('productNumber').innerText = `No. ${postData.productNumber}`;
+            const companyName = postData.companyName ? postData.companyName + " " : ''; // 회사명이 있으면 추가
+
+            // 품번 및 회사명 표시
+            document.getElementById('productNumber').innerText = `No. ${companyName}${postData.productNumber}`;
 
             // 상세 정보 표시 (비디오 무한 반복 및 자동 재생)
             postDetail.innerHTML = `
@@ -37,7 +39,7 @@ async function loadPostDetail() {
                     ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
                 <div class="post-info">
-                    <h2>${postData.productNumber}</h2>
+                    <h2>${companyName}${postData.productNumber}</h2>
                     <p>종류: ${postData.type}</p>
                     <p>사이즈: ${postData.size}</p>
                     <p>중량: ${postData.weight}</p>
@@ -66,7 +68,7 @@ async function loadPostDetail() {
             // 이미지 클릭 시 모달 열기
             document.querySelectorAll('.gallery-image').forEach(image => {
                 image.addEventListener('click', () => {
-                    openModal(image.src, postData.productNumber);
+                    openModal(image.src, `${companyName}${postData.productNumber}`);
                 });
             });
         } else {
