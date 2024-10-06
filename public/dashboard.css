@@ -1,28 +1,61 @@
+/* 전체 페이지 스타일 */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
     background-color: #0047ab;
     color: white;
+    padding: 20px;
+    text-align: center;
 }
 
+h1 {
+    margin: 0;
+}
+
+/* 게시물 그리드 레이아웃 */
 #postList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px, 최대 1fr */
+    gap: 20px;
     padding: 20px;
 }
 
-button {
-    padding: 10px 20px;
-    background-color: royalblue;
-    color: white;
-    border: none;
-    cursor: pointer;
+.post {
+    background-color: #f0f0f0;
+    width: 100%;
+    padding-bottom: 100%;  /* 정사각형을 유지하기 위해 */
+    position: relative;
+    overflow: hidden;
 }
 
-button#uploadBtn {
-    display: none; /* 기본적으로 관리자만 보기 위해 숨김 */
+.post img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* 이미지가 정사각형 내부에 맞게 조정됨 */
+}
+
+#uploadModal {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#uploadForm {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
 }
