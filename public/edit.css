@@ -17,22 +17,6 @@ h1 {
     margin: 0;
 }
 
-#backBtn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: #0047ab;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#backBtn:hover {
-    background-color: #003580;
-}
-
 #editSection {
     display: flex;
     flex-direction: column;
@@ -51,6 +35,10 @@ h1 {
     width: 400px;
 }
 
+.full-width {
+    width: 100%;
+}
+
 .half-width {
     display: flex;
     justify-content: space-between;
@@ -62,26 +50,30 @@ h1 {
     width: 70%;
 }
 
-.full-width {
+.full-width input[type="file"] {
     width: 100%;
+    padding: 10px;
+    margin-top: 10px;
 }
 
-label {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 5px;
+.media-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-input[type="text"], input[type="number"], select, textarea {
-    font-size: 16px;
-    padding: 8px;
+.media-preview img, .media-preview video {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
     border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    border: 2px solid transparent;
 }
 
-textarea {
-    resize: none;
+.media-preview img.selected, .media-preview video.selected {
+    border-color: #0047ab; /* 썸네일 선택 시 파란색 테두리 */
 }
 
 button {
