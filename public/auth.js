@@ -1,7 +1,6 @@
 import { auth } from "./firebase.js";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// 문서가 완전히 로드된 후 실행
 document.addEventListener('DOMContentLoaded', () => {
     // 로그인 처리
     const loginForm = document.getElementById('loginForm');
@@ -10,8 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const userId = document.getElementById('userId').value;
             const password = document.getElementById('password').value;
-            
-            signInWithEmailAndPassword(auth, userId, password)
+
+            let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
+
+            signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     window.location.href = '/dashboard.html';
                 })
@@ -21,21 +22,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
     // 회원가입 처리
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            let userId = document.getElementById('userId').value;
+            const userId = document.getElementById('userId').value;
             const password = document.getElementById('password').value;
 
-            // 유효한 이메일 형식으로 변환 (ID를 이메일처럼 사용)
-            if (!userId.includes('@')) {
-                userId += '@example.com'; // ID에 기본 도메인 추가
+            let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
+
+            // 이메일 형식 확인 (유효성 검사)
+            if (!validateEmail(email)) {
+                console.error("유효하지 않은 이메일 형식입니다.");
+                return;
             }
 
-            createUserWithEmailAndPassword(auth, userId, password)
+            createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     window.location.href = '/dashboard.html';
                 })
@@ -44,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
-});
 
-    
     // 로그아웃 처리
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
@@ -59,3 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ID를 이메일 형식으로 변환하는 함수
+function convertToEmailFormat(userId) {
+    if (!userId.includes('@')) {
+        return userId + '@example.com';  // 기본 도메인을 추가
+    }
+    return userId;
+}
+
+// 이메일 유효성 검사 함수
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // 간단한 이메일 형식 유효성 검사 정규식
+    return re.test(String(email).toLowerCase());
+}
