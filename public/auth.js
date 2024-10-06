@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    window.location.href = '/dashboard.html';
+                    window.location.href = '/dashboard.html';  // 로그인 성공 후 대시보드로 이동
                 })
                 .catch((error) => {
                     console.error("로그인 오류:", error.message);
+                    alert('로그인 실패: ' + error.message);
                 });
         });
     }
@@ -30,23 +31,25 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const userId = document.getElementById('userId').value;
             const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
 
             let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    // Firestore에 사용자 정보 저장 (기본으로 'user'로 저장)
+                    // Firestore에 사용자 정보 저장 (선택된 역할 저장)
                     return setDoc(doc(db, "users", user.uid), {
                         email: user.email,
-                        role: 'user'  // 기본적으로 일반 사용자로 설정
+                        role: role  // 선택한 역할에 따라 관리자 또는 사용자로 설정
                     });
                 })
                 .then(() => {
-                    window.location.href = '/dashboard.html';
+                    window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
                 })
                 .catch((error) => {
                     console.error("회원가입 오류:", error.message);
+                    alert('회원가입 실패: ' + error.message);
                 });
         });
     }
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             signOut(auth).then(() => {
-                window.location.href = '/login.html';
+                window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
             }).catch((error) => {
                 console.error("로그아웃 오류:", error.message);
             });
