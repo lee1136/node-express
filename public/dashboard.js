@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 회원가입 버튼 클릭 이벤트
     document.getElementById('signupBtn').addEventListener('click', () => {
-        window.location.href = '/register.html'; // 회원가입 페이지로 이동
+        window.location.href = '/signup.html'; // 회원가입 페이지로 이동
     });
 });
 
