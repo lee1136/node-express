@@ -3,6 +3,10 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+// 페이지에 표시할 게시물 수와 현재 페이지 번호
+const postsPerPage = 2;
+let currentPage = 1;
+
 // 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -24,52 +28,67 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 업로드 버튼 클릭 시 업로드 페이지로 이동
-document.getElementById('uploadBtn').addEventListener('click', () => {
-    window.location.href = '/upload.html';  // 업로드 페이지로 이동
-});
-
-// 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-document.getElementById('signupBtn').addEventListener('click', () => {
-    window.location.href = '/register.html';  // 회원가입 페이지로 이동
-});
-
 // Firestore에서 게시물 가져오기
-async function loadPosts() {
+async function loadPosts(page) {
     const postList = document.getElementById('postList');
     postList.innerHTML = '';  // 게시물 목록 초기화
 
     try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
-        querySnapshot.forEach((doc) => {
-            const postData = doc.data();
-            const postElement = createPostElement(postData, doc.id); // 게시물 ID를 전달
-            postList.appendChild(postElement);
+        const totalPosts = querySnapshot.size; // 전체 게시물 수
+        const startIndex = (page - 1) * postsPerPage; // 현재 페이지의 시작 인덱스
+        const endIndex = Math.min(startIndex + postsPerPage, totalPosts); // 현재 페이지의 끝 인덱스
+
+        // 게시물 목록을 페이지에 맞게 추가
+        querySnapshot.forEach((doc, index) => {
+            if (index >= startIndex && index < endIndex) {
+                const postData = doc.data();
+                const postElement = createPostElement(postData);
+                postList.appendChild(postElement);
+            }
         });
+
+        // 페이지 버튼 표시
+        document.getElementById('prevBtn').style.display = page > 1 ? 'block' : 'none'; // 이전 버튼
+        document.getElementById('nextBtn').style.display = endIndex < totalPosts ? 'block' : 'none'; // 다음 버튼
     } catch (error) {
         console.error('게시물 불러오기 오류:', error);
     }
 }
 
 // 게시물 요소 생성 함수
-function createPostElement(postData, postId) {
+function createPostElement(postData) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
     const img = document.createElement('img');
-    img.src = postData.thumbnail || postData.media[0].url;  // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
+    img.src = postData.thumbnail || postData.media[0].url; // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
 
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
-        window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동
+        window.location.href = `/detail.html?postId=${postData.id}`; // 상세 페이지로 이동
     });
 
     postDiv.appendChild(img);
+
     return postDiv;
 }
 
 // 페이지 로드 시 게시물 불러오기
-document.addEventListener('DOMContentLoaded', loadPosts);
+document.addEventListener('DOMContentLoaded', () => {
+    loadPosts(currentPage);
+
+    // 페이지 버튼 클릭 이벤트
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        currentPage--;
+        loadPosts(currentPage);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        currentPage++;
+        loadPosts(currentPage);
+    });
+});
 
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
