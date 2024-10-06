@@ -14,6 +14,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 h1 {
@@ -35,6 +36,25 @@ h1 {
 
 #backBtn:hover {
     background-color: #003580;
+}
+
+/* 수정 버튼 스타일 및 위치 */
+#editBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#editBtn:hover {
+    background-color: #218838;
 }
 
 #postDetail {
@@ -85,7 +105,6 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
 }
-
 
 /* 모달 스타일 */
 .modal {
