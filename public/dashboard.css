@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #0047ab;
+    color: white;
+}
+
+#postList {
+    padding: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: royalblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button#uploadBtn {
+    display: none; /* 기본적으로 관리자만 보기 위해 숨김 */
+}
