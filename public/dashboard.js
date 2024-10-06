@@ -3,6 +3,8 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+let postsData = [];  // 전체 게시물 데이터를 저장할 배열
+
 // 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -24,15 +26,17 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 업로드 버튼 클릭 시 업로드 페이지로 이동
-document.getElementById('uploadBtn').addEventListener('click', () => {
-    window.location.href = '/upload.html';  // 업로드 페이지로 이동
+// 검색 입력 필드의 입력 변화 감지
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const searchTerm = e.target.value.trim();  // 입력된 검색어
+    filterPosts(searchTerm);  // 검색어에 따라 게시물 필터링
 });
 
-// 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-document.getElementById('signupBtn').addEventListener('click', () => {
-    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
-});
+// 게시물 필터링 함수 (검색어에 따라 필터링)
+function filterPosts(searchTerm) {
+    const filteredPosts = postsData.filter(post => post.productNumber.includes(searchTerm));
+    renderPosts(filteredPosts);  // 필터링된 게시물만 렌더링
+}
 
 // Firestore에서 게시물 가져오기
 async function loadPosts() {
@@ -41,18 +45,29 @@ async function loadPosts() {
 
     try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
-        querySnapshot.forEach((doc) => {
-            const postData = doc.data();
-            const postElement = createPostElement(postData, doc.id); // 게시물 ID를 전달
-            postList.appendChild(postElement);
-        });
+        postsData = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));  // 게시물 데이터를 배열에 저장
+        renderPosts(postsData);  // 모든 게시물 초기 렌더링
     } catch (error) {
         console.error('게시물 불러오기 오류:', error);
     }
 }
 
+// 게시물 목록을 렌더링하는 함수
+function renderPosts(posts) {
+    const postList = document.getElementById('postList');
+    postList.innerHTML = '';  // 기존 게시물 목록 초기화
+
+    posts.forEach(postData => {
+        const postElement = createPostElement(postData);
+        postList.appendChild(postElement);
+    });
+}
+
 // 게시물 요소 생성 함수
-function createPostElement(postData, postId) {
+function createPostElement(postData) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
@@ -62,7 +77,7 @@ function createPostElement(postData, postId) {
 
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
-        window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동
+        window.location.href = `/detail.html?postId=${postData.id}`;
     });
 
     postDiv.appendChild(img);
@@ -81,11 +96,12 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     });
 });
 
-// 업로드 및 회원가입 버튼 클릭 시 페이지 이동
+// 업로드 버튼 클릭 시 업로드 페이지로 이동
 document.getElementById('uploadBtn').addEventListener('click', () => {
-    window.location.href = '/upload.html'; // 업로드 페이지로 이동
+    window.location.href = '/upload.html';  // 업로드 페이지로 이동
 });
 
+// 회원가입 버튼 클릭 시 회원가입 페이지로 이동
 document.getElementById('signupBtn').addEventListener('click', () => {
-    window.location.href = '/register.html'; // 회원가입 페이지로 이동
+    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
 });
