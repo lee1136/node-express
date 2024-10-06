@@ -22,6 +22,7 @@ async function loadPostDetail() {
         if (docSnap.exists()) {
             const postData = docSnap.data();
             // 상세 정보 표시
+            document.getElementById('productNumber').innerText = `No. ${postData.productNumber}`; // 품번 표시
             postDetail.innerHTML = `
                 <video src="${postData.media[0].url}" class="post-video" controls></video> <!-- 중앙에 비디오 -->
                 <div class="image-gallery">
