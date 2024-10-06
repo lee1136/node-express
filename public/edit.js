@@ -79,7 +79,6 @@ function deleteMediaFile(media, index) {
 
         // Firebase Storage에서 삭제
         deleteObject(mediaRef).then(() => {
-            // Firestore에서 해당 미디어 정보 삭제하지 않음
             existingMedia.splice(index, 1);  // 배열에서 미디어 제거
             displayMediaPreview(existingMedia);  // 미리보기 갱신
             alert('미디어 파일이 삭제되었습니다. 계속 수정할 수 있습니다.');
