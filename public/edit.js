@@ -56,8 +56,51 @@ function displayMediaPreview(mediaFiles) {
         mediaElement.addEventListener('click', () => {
             selectedThumbnail = media;  // 썸네일 선택
         });
-        mediaPreview.appendChild(mediaElement);
+
+        // 미디어 삭제 버튼
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '삭제';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.addEventListener('click', () => {
+            deleteMediaFile(media, index);
+        });
+
+        const mediaContainer = document.createElement('div');
+        mediaContainer.appendChild(mediaElement);
+        mediaContainer.appendChild(deleteBtn);
+        mediaPreview.appendChild(mediaContainer);
     });
+}
+
+// 미디어 파일 삭제
+function deleteMediaFile(media, index) {
+    const confirmDelete = confirm('이 미디어 파일을 삭제하시겠습니까?');
+    if (confirmDelete) {
+        const mediaRef = ref(storage, media.url);  // Firebase Storage 참조
+
+        // Firebase Storage에서 삭제
+        deleteObject(mediaRef).then(() => {
+            // Firestore에서 해당 미디어 정보 삭제
+            existingMedia.splice(index, 1);  // 기존 배열에서 해당 미디어 제거
+            updatePostMedia();  // 수정된 미디어 배열로 업데이트
+            displayMediaPreview(existingMedia);  // 미리보기 갱신
+            alert('미디어 파일이 삭제되었습니다.');
+        }).catch((error) => {
+            console.error('미디어 파일 삭제 중 오류:', error);
+        });
+    }
+}
+
+// 수정된 미디어 배열 Firestore에 업데이트
+function updatePostMedia() {
+    const postRef = doc(db, 'posts', postId);
+    setDoc(postRef, { media: existingMedia }, { merge: true })
+        .then(() => {
+            console.log('미디어 파일이 성공적으로 업데이트되었습니다.');
+        })
+        .catch((error) => {
+            console.error('미디어 업데이트 오류:', error);
+        });
 }
 
 // 게시물 삭제 버튼 클릭 시 게시물 삭제
