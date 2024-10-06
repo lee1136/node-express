@@ -1,5 +1,6 @@
-import { auth } from "./firebase.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { auth, db } from "./firebase.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     // 로그인 처리
@@ -32,14 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
 
-            // 이메일 형식 확인 (유효성 검사)
-            if (!validateEmail(email)) {
-                console.error("유효하지 않은 이메일 형식입니다.");
-                return;
-            }
-
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Firestore에 사용자 정보 및 역할(role)을 저장
+                    return setDoc(doc(db, "users", user.uid), {
+                        email: user.email,
+                        role: 'user'  // 기본적으로 일반 사용자로 설정
+                    });
+                })
+                .then(() => {
                     window.location.href = '/dashboard.html';
                 })
                 .catch((error) => {
@@ -67,10 +70,4 @@ function convertToEmailFormat(userId) {
         return userId + '@example.com';  // 기본 도메인을 추가
     }
     return userId;
-}
-
-// 이메일 유효성 검사 함수
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // 간단한 이메일 형식 유효성 검사 정규식
-    return re.test(String(email).toLowerCase());
 }
