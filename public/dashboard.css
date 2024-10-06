@@ -64,3 +64,18 @@ h1 {
         grid-template-columns: repeat(6, 1fr);  /* 큰 화면에서 최대 6개 */
     }
 }
+
+button {
+    background-color: #0047ab;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #003580;
+}
