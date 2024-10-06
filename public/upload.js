@@ -52,7 +52,8 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 document.getElementById('uploadForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const productNumber = document.getElementById('productNumber').value;  // 회사명 + 품번 입력 필드
+    const companyName = document.getElementById('companyName').value || '';  // 회사명 생략 가능
+    const productNumber = document.getElementById('productNumber').value;  // 품번 입력 필드
     const type = document.getElementById('type').value;
     const size = document.getElementById('size').value;
     const sizeUnit = document.getElementById('sizeUnit').value;
@@ -77,7 +78,8 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         const thumbnailURL = mediaFiles.find(media => media.fileName === selectedThumbnail.name)?.url || mediaFiles[0].url;
         const postId = `post_${Date.now()}`;
         setDoc(doc(db, "posts", postId), {
-            productNumber,  // 회사명 + 품번 저장
+            companyName,  // 회사명 저장
+            productNumber,  // 품번 저장
             type,
             size: `${size} ${sizeUnit}`,
             weight: `${weight}g`,
