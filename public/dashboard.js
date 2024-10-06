@@ -103,5 +103,5 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
 
 // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
 document.getElementById('signupBtn').addEventListener('click', () => {
-    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
+    window.location.href = '/register.html';  // 회원가입 페이지로 이동
 });
