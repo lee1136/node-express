@@ -61,6 +61,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     const files = document.getElementById('fileInput').files;
     const uploadPromises = [];
 
+    // 파일 업로드 처리
     Array.from(files).forEach(file => {
         const storageRef = ref(storage, 'uploads/' + file.name);
         const uploadTask = uploadBytes(storageRef, file).then(snapshot => {
