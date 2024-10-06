@@ -37,7 +37,7 @@ async function loadPosts() {
         const querySnapshot = await getDocs(collection(db, 'posts'));
         querySnapshot.forEach((doc) => {
             const postData = doc.data();
-            const postElement = createPostElement(postData);
+            const postElement = createPostElement(postData, doc.id); // 게시물 ID를 전달
             postList.appendChild(postElement);
         });
     } catch (error) {
@@ -46,13 +46,18 @@ async function loadPosts() {
 }
 
 // 게시물 요소 생성 함수
-function createPostElement(postData) {
+function createPostElement(postData, postId) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
     const img = document.createElement('img');
     img.src = postData.thumbnail || postData.media[0].url;  // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
     img.alt = postData.productNumber;
+
+    // 게시물 클릭 시 상세 페이지로 이동
+    postDiv.addEventListener('click', () => {
+        window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동, postId를 쿼리 파라미터로 전달
+    });
 
     postDiv.appendChild(img);
 
