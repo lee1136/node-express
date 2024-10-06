@@ -17,68 +17,43 @@ h1 {
     margin: 0;
 }
 
-/* 게시물 그리드 레이아웃 */
 #postList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px, 최대 1fr */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 반응형 그리드 */
+    gap: 10px; /* 그리드 간격 */
     padding: 20px;
-}
-
-@media (min-width: 900px) {
-    #postList {
-        grid-template-columns: repeat(6, 1fr);  /* 가로 최대 6개 */
-    }
 }
 
 .post {
-    background-color: #f0f0f0;
-    width: 100%;
-    padding-bottom: 100%;  /* 정사각형을 유지하기 위해 */
     position: relative;
-    overflow: hidden;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden; /* 이미지가 모서리에서 벗어나지 않도록 함 */
+    transition: transform 0.2s ease; /* 부드러운 전환 효과 */
+}
+
+.post:hover {
+    filter: brightness(80%); /* 어두워지는 효과 */
+    transform: scale(1.05); /* 약간 확대되는 효과 */
 }
 
 .post img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;  /* 이미지가 정사각형 내부에 맞게 조정됨 */
-}
-
-#uploadModal {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#uploadForm {
-    background: white;
-    padding: 20px;
+    height: auto;
     border-radius: 10px;
 }
 
-/* 버튼 기본 스타일 */
 button {
     background-color: #0047ab; /* 기본 버튼 배경색 */
     color: white; /* 버튼 텍스트 색상 */
-    padding: 10px 20px; /* 버튼 패딩 */
+    padding: 10px;
     border: none; /* 기본 테두리 제거 */
     border-radius: 5px; /* 모서리 둥글게 */
     cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 */
-    font-size: 16px; /* 버튼 텍스트 크기 */
+    font-size: 16px;
     transition: background-color 0.3s ease; /* 부드러운 배경색 전환 */
 }
 
-/* 버튼을 마우스 오버할 때의 스타일 */
 button:hover {
     background-color: #003580; /* 호버 시 어두운 파란색 */
 }
