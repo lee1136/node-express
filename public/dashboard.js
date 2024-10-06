@@ -92,6 +92,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const uid = user.uid;
+        const docRef = doc(db, "users", uid);
+        getDoc(docRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userRole = docSnap.data().role;
+                if (userRole === 'admin') {
+                    document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
+                    document.getElementById('signupBtn').style.display = 'block'; // 관리자에게만 회원가입 버튼 표시
+                }
+            }
+        }).catch((error) => {
+            console.error("역할 확인 오류:", error);
+        });
+    } else {
+        window.location.href = '/login.html';  // 로그인되지 않은 경우 로그인 페이지로 이동
+    }
+});
+
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
     signOut(auth).then(() => {
