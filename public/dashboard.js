@@ -43,7 +43,11 @@ async function loadPosts(page) {
         querySnapshot.forEach((doc, index) => {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
-                console.log(postData);  // 게시물 데이터를 출력하여 확인
+                console.log("게시물 데이터:", postData);  // 게시물 데이터를 출력하여 확인
+
+                const imageUrl = postData.thumbnail || postData.media[0]?.url || '';
+                console.log("이미지 URL:", imageUrl);  // 이미지 URL을 출력하여 확인
+
                 const postElement = createPostElement(postData, doc.id);
                 postList.appendChild(postElement);
             }
