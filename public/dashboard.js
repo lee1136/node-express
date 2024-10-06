@@ -1,6 +1,5 @@
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지에 표시할 게시물 수와 현재 페이지 번호
@@ -31,6 +30,13 @@ async function loadPosts(page) {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
                 console.log("게시물 데이터:", postData);  // 게시물 데이터를 출력하여 확인
+
+                if (!postData.media || postData.media.length === 0) {
+                    console.error("media 필드가 비어있습니다:", postData);
+                } else {
+                    console.log("media 필드 확인:", postData.media);
+                }
+
                 const postElement = createPostElement(postData, doc.id);
                 postList.appendChild(postElement);
             }
@@ -51,14 +57,15 @@ function createPostElement(postData, postId) {
 
     // 이미지 URL 설정
     const img = document.createElement('img');
-    img.src = postData.thumbnail || postData.media?.[0]?.url || ''; // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
-    img.alt = postData.title || '게시물 이미지'; // 이미지 대체 텍스트 추가
-
-    if (!img.src) {
-        img.src = 'path/to/default-image.jpg'; // 이미지 URL이 없을 경우 기본 이미지 설정
+    if (postData.media && postData.media.length > 0 && postData.media[0].url) {
+        img.src = postData.media[0].url; // media 배열의 첫 번째 이미지 사용
+        console.log("이미지 URL:", img.src);
+    } else {
+        img.src = 'path/to/default-image.jpg'; // 이미지가 없을 경우 기본 이미지
         console.log("이미지 URL이 없습니다. 기본 이미지로 대체합니다.");
     }
 
+    img.alt = postData.title || '게시물 이미지'; // 이미지 대체 텍스트 추가
     postDiv.appendChild(img); // 이미지 추가
 
     // 게시물 클릭 시 상세 페이지로 이동
@@ -84,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPosts(currentPage);
     });
 });
-
 
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
