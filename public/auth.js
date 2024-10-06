@@ -1,36 +1,29 @@
 import { auth, db } from "./firebase.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { setDoc, doc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 페이지가 로드되면 기존 회원 정보를 가져옴
-document.addEventListener('DOMContentLoaded', () => {
-    const userInfoDiv = document.getElementById('userInfo');
+// 페이지가 로드되면 모든 회원 정보를 가져옴
+document.addEventListener('DOMContentLoaded', async () => {
+    const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            try {
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
+    try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        let userInfoHTML = '<h3>모든 회원 정보</h3>';
 
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    userInfoDiv.innerHTML = `
-                        <p>로그인된 사용자: ${userData.email}</p>
-                        <p>역할: ${userData.role}</p>
-                        <button id="logoutBtn">로그아웃</button>
-                    `;
-                    setupLogout();
-                } else {
-                    userInfoDiv.innerHTML = '<p>사용자 정보를 가져올 수 없습니다.</p>';
-                }
-            } catch (error) {
-                console.error('회원 정보 불러오기 오류:', error);
-                userInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
-            }
-        } else {
-            userInfoDiv.innerHTML = '<p>로그인된 사용자가 없습니다.</p>';
-        }
-    });
+        querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            userInfoHTML += `
+                <p>아이디: ${userData.email}</p>
+                <p>역할: ${userData.role}</p>
+                <hr>
+            `;
+        });
+
+        allUsersInfoDiv.innerHTML = userInfoHTML;
+    } catch (error) {
+        console.error('회원 정보 불러오기 오류:', error);
+        allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
+    }
 
     // 회원가입 처리
     const registerForm = document.getElementById('registerForm');
@@ -61,19 +54,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
 
-// 로그아웃 처리
-function setupLogout() {
-    const logoutBtn = document.getElementById('logoutBtn');
-    logoutBtn.addEventListener('click', () => {
-        signOut(auth).then(() => {
-            window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
-        }).catch((error) => {
-            console.error("로그아웃 오류:", error.message);
+    // 로그인 처리
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('userId').value;
+            const password = document.getElementById('password').value;
+
+            let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = '/dashboard.html';  // 로그인 성공 후 대시보드로 이동
+            } catch (error) {
+                console.error('로그인 오류:', error);
+                alert('로그인 실패: ' + error.message);
+            }
         });
-    });
-}
+    }
+
+    // 로그아웃 처리
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
+            }).catch((error) => {
+                console.error("로그아웃 오류:", error.message);
+            });
+        });
+    }
+});
 
 // ID를 이메일 형식으로 변환하는 함수
 function convertToEmailFormat(userId) {
