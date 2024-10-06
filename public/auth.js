@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { setDoc, doc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { setDoc, doc, getDocs, collection, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
 document.addEventListener('DOMContentLoaded', async () => {
@@ -8,18 +8,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         const querySnapshot = await getDocs(collection(db, 'users'));
-        let userInfoHTML = '<h3>모든 회원 정보</h3>';
+        let userInfoHTML = '<h3>모든 회원 정보 (역할 수정 가능)</h3>';
 
         querySnapshot.forEach((doc) => {
             const userData = doc.data();
             userInfoHTML += `
-                <p>아이디: ${userData.email}</p>
-                <p>역할: ${userData.role}</p>
-                <hr>
+                <div>
+                    <p>아이디: ${userData.email}</p>
+                    <label for="role-${doc.id}">역할:</label>
+                    <select id="role-${doc.id}">
+                        <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
+                        <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
+                    </select>
+                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
+                    <hr>
+                </div>
             `;
         });
 
         allUsersInfoDiv.innerHTML = userInfoHTML;
+
+        // 역할 수정 버튼 클릭 이벤트
+        document.querySelectorAll('.updateRoleBtn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const userId = e.target.getAttribute('data-user-id');
+                const newRole = document.getElementById(`role-${userId}`).value;
+
+                try {
+                    await updateDoc(doc(db, 'users', userId), {
+                        role: newRole
+                    });
+                    alert('역할이 성공적으로 수정되었습니다.');
+                } catch (error) {
+                    console.error('역할 수정 오류:', error);
+                    alert('역할 수정 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
     } catch (error) {
         console.error('회원 정보 불러오기 오류:', error);
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
