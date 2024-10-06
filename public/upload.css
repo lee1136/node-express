@@ -80,7 +80,7 @@ h1 {
 
 .half-width {
     display: inline-block;
-    width: 48%;  /* 두 필드를 한 줄에 맞추기 위해 */
+    width: 48%;
 }
 
 .full-width {
@@ -104,6 +104,19 @@ input[type="text"], input[type="number"], select, textarea {
 
 textarea {
     resize: none;
+}
+
+/* 단위를 표시하는 스타일 */
+.with-unit {
+    position: relative;
+}
+
+.with-unit span {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    font-size: 14px;
+    color: #333;
 }
 
 button {
