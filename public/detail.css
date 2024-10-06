@@ -24,7 +24,13 @@ h1 {
     padding-left: 20px;
 }
 
-#backBtn {
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* 버튼 간 간격 */
+}
+
+#backBtn, #editBtn {
     background-color: #0047ab;
     color: white;
     padding: 10px 20px;
@@ -34,27 +40,8 @@ h1 {
     font-size: 16px;
 }
 
-#backBtn:hover {
+#backBtn:hover, #editBtn:hover {
     background-color: #003580;
-}
-
-/* 수정 버튼 스타일 및 위치 */
-#editBtn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-#editBtn:hover {
-    background-color: #218838;
 }
 
 #postDetail {
