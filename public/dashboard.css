@@ -1,70 +1,119 @@
-/* 전체 페이지 스타일 */
+/* 기본 스타일 설정 */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #f4f4f4;
 }
 
 header {
-    background-color: #0047ab;
+    background-color: #007bff;
     color: white;
-    padding: 20px;
-    text-align: center;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1 {
     margin: 0;
+    font-size: 24px;
 }
 
-#postList {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 가로로 2~6개 배치 */
-    gap: 10px; /* 그리드 간격 */
-    padding: 20px;
-}
-
-.post {
-    position: relative;
-    width: 100%;
-    padding-top: 100%; /* 정사각형을 유지하기 위해 비율 조정 */
-    background-color: #e0e0e0; /* 기본 배경색 */
-    overflow: hidden; /* 이미지가 모서리에서 벗어나지 않도록 함 */
-    border-radius: 10px;
-    cursor: pointer; /* 클릭 가능 표시 */
-}
-
-.post img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 이미지 비율 유지 */
-    transition: transform 0.3s ease; /* 이미지에 부드러운 전환 효과 */
-}
-
-.post:hover img {
-    transform: scale(1.1); /* 호버 시 이미지 확대 효과 */
-}
-
-#pagination {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-}
-
+/* 업로드 및 회원가입 버튼 스타일 */
 button {
-    background-color: #0047ab; /* 기본 버튼 배경색 */
-    color: white; /* 버튼 텍스트 색상 */
-    padding: 10px 20px;
-    border: none; /* 기본 테두리 제거 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 */
-    font-size: 16px;
-    transition: background-color 0.3s ease; /* 부드러운 배경색 전환 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #003580; /* 호버 시 어두운 파란색 */
+    background-color: #0056b3;
+}
+
+#uploadBtn, #signupBtn {
+    display: none; /* 기본적으로 숨겨진 상태 */
+    margin-left: 10px;
+}
+
+#logoutBtn {
+    background-color: #dc3545;
+}
+
+#logoutBtn:hover {
+    background-color: #c82333;
+}
+
+/* 게시물 목록 스타일 */
+#postList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 그리드 */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* 각 게시물 스타일 */
+.post {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.post:hover {
+    transform: scale(1.05); /* 마우스 오버 시 확대 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 이미지 스타일 */
+.post img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* 이미지를 잘라서 정사각형에 맞추기 */
+    transition: opacity 0.3s;
+}
+
+.post img:hover {
+    opacity: 0.8; /* 마우스 오버 시 이미지 살짝 어둡게 */
+}
+
+/* 페이지 내비게이션 버튼 */
+#prevBtn, #nextBtn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    background-color: #0056b3;
+}
+
+/* 페이지 내비게이션 버튼 감추기 (기본값) */
+#prevBtn, #nextBtn {
+    display: none;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 600px) {
+    #postList {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 작은 화면에서는 크기 조절 */
+    }
+
+    .post img {
+        height: 150px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
 }
