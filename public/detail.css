@@ -74,7 +74,7 @@ h1 {
 }
 
 .image-gallery img {
-    width: 30%;  /* 이미지의 폭을 30%로 설정하여 세 개씩 가로로 배치 */
+    width: 20%;  /* 이미지의 폭을 20%로 설정하여 다섯 개씩 가로로 배치 */
     height: auto;  /* 높이는 자동 조정 */
     margin: 5px;  /* 이미지 간격 설정 */
     border-radius: 5px;
