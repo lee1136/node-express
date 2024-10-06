@@ -88,6 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage++;
         loadPosts(currentPage);
     });
+
+    // 업로드 버튼 클릭 이벤트
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+        window.location.href = '/upload.html'; // 업로드 페이지로 이동
+    });
+
+    // 회원가입 버튼 클릭 이벤트
+    document.getElementById('signupBtn').addEventListener('click', () => {
+        window.location.href = '/register.html'; // 회원가입 페이지로 이동
+    });
 });
 
 // 로그아웃 처리
