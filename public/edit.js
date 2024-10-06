@@ -1,6 +1,10 @@
-import { auth, db } from "./firebase.js";
+import { auth, db, storage } from "./firebase.js";
 import { getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+let existingMedia = [];  // 기존 미디어를 저장할 배열
+let selectedThumbnail = null;
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -27,6 +31,10 @@ async function loadPostDetail() {
             document.getElementById('sizeUnit').value = postData.size.split(' ')[1];
             document.getElementById('weight').value = postData.weight.replace('g', '');
             document.getElementById('additionalContent').value = postData.additionalContent;
+
+            // 기존 미디어 미리보기
+            existingMedia = postData.media || [];
+            displayMediaPreview(existingMedia);
         } else {
             alert('게시물을 찾을 수 없습니다.');
         }
@@ -35,8 +43,25 @@ async function loadPostDetail() {
     }
 }
 
+// 미디어 미리보기 표시 함수
+function displayMediaPreview(mediaFiles) {
+    const mediaPreview = document.getElementById('mediaPreview');
+    mediaPreview.innerHTML = '';  // 기존 미디어 초기화
+
+    mediaFiles.forEach((media, index) => {
+        const mediaElement = document.createElement(media.type.includes('video') ? 'video' : 'img');
+        mediaElement.src = media.url;
+        mediaElement.controls = media.type.includes('video');  // 동영상이면 컨트롤 추가
+        mediaElement.classList.add('media-item');
+        mediaElement.addEventListener('click', () => {
+            selectedThumbnail = media;  // 썸네일 선택
+        });
+        mediaPreview.appendChild(mediaElement);
+    });
+}
+
 // 수정 완료 버튼 클릭 시 수정된 데이터 저장
-document.getElementById('editForm').addEventListener('submit', (e) => {
+document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const productNumber = document.getElementById('productNumber').value;
@@ -44,6 +69,26 @@ document.getElementById('editForm').addEventListener('submit', (e) => {
     const size = `${document.getElementById('size').value} ${document.getElementById('sizeUnit').value}`;
     const weight = `${document.getElementById('weight').value}g`;
     const additionalContent = document.getElementById('additionalContent').value;
+    const files = document.getElementById('fileInput').files;
+    const uploadPromises = [];
+
+    // 파일 업로드가 있는 경우에만 처리
+    if (files.length > 0) {
+        Array.from(files).forEach(file => {
+            const storageRef = ref(storage, 'uploads/' + file.name);
+            const uploadTask = uploadBytes(storageRef, file).then(snapshot => {
+                return getDownloadURL(snapshot.ref).then(downloadURL => {
+                    return { fileName: file.name, url: downloadURL, type: file.type };
+                });
+            });
+            uploadPromises.push(uploadTask);
+        });
+
+        const newMediaFiles = await Promise.all(uploadPromises);
+        existingMedia = [...existingMedia, ...newMediaFiles];  // 기존 미디어에 새 미디어 추가
+    }
+
+    const thumbnailURL = selectedThumbnail?.url || existingMedia[0]?.url;
 
     // Firestore에 수정된 데이터 저장
     setDoc(doc(db, "posts", postId), {
@@ -52,9 +97,11 @@ document.getElementById('editForm').addEventListener('submit', (e) => {
         size,
         weight,
         additionalContent,
+        media: existingMedia,
+        thumbnail: thumbnailURL,  // 썸네일 업데이트
     }).then(() => {
         alert('게시물이 수정되었습니다.');
-        window.location.href = '/detail.html?postId=' + postId; // 수정 완료 후 상세 페이지로 이동
+        window.location.href = '/detail.html?postId=' + postId;  // 수정 완료 후 상세 페이지로 이동
     }).catch(error => {
         console.error("게시물 수정 중 오류:", error);
     });
