@@ -4,7 +4,7 @@ import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-f
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지에 표시할 게시물 수와 현재 페이지 번호
-const postsPerPage = 3; // 한 페이지에 표시할 게시물 수
+const postsPerPage = 2; // 한 페이지에 표시할 게시물 수
 let currentPage = 1;
 
 // 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
@@ -97,4 +97,13 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     }).catch((error) => {
         console.error("로그아웃 오류:", error.message);
     });
+});
+
+// 버튼 클릭 시 이동
+document.getElementById('uploadBtn').addEventListener('click', () => {
+    window.location.href = '/upload.html';  // 업로드 페이지로 이동
+});
+
+document.getElementById('signupBtn').addEventListener('click', () => {
+    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
 });
