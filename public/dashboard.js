@@ -43,7 +43,7 @@ async function loadPosts(page) {
         querySnapshot.forEach((doc, index) => {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
-                const postElement = createPostElement(postData);
+                const postElement = createPostElement(postData, doc.id);
                 postList.appendChild(postElement);
             }
         });
@@ -57,7 +57,7 @@ async function loadPosts(page) {
 }
 
 // 게시물 요소 생성 함수
-function createPostElement(postData) {
+function createPostElement(postData, postId) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
@@ -66,7 +66,7 @@ function createPostElement(postData) {
 
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
-        window.location.href = `/detail.html?postId=${postData.id}`; // 상세 페이지로 이동
+        window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동
     });
 
     postDiv.appendChild(img);
