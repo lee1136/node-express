@@ -5,7 +5,7 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* 위쪽 정렬 */
     height: 100vh;
     background-color: #f0f4f8;
 }
@@ -19,6 +19,7 @@ body {
     text-align: center;
     width: 100%;
     max-width: 400px;
+    margin-top: 20px; /* 상단에 여유 공간을 두기 위한 설정 */
 }
 
 /* 제목 스타일 */
