@@ -19,8 +19,8 @@ h1 {
 
 #postList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px, 최대 가로 크기에 맞게 */
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px 크기, 최대 가로에 맞게 반복 */
+    grid-gap: 10px;  /* 게시물 사이의 간격 */
     padding: 20px;
 }
 
@@ -39,24 +39,28 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover;  /* 이미지가 정사각형을 꽉 채우도록 설정 */
 }
 
 .post:hover {
-    transform: scale(1.05);  /* 마우스 오버 시 확대 */
+    transform: scale(1.05);  /* 마우스 오버 시 확대 효과 */
 }
 
-button {
-    background-color: #0047ab;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+/* 반응형 조정 */
+@media (min-width: 300px) {
+    #postList {
+        grid-template-columns: repeat(2, 1fr);  /* 최소 2개 */
+    }
 }
 
-button:hover {
-    background-color: #003580;
+@media (min-width: 768px) {
+    #postList {
+        grid-template-columns: repeat(4, 1fr);  /* 중간 크기에서 4개 */
+    }
+}
+
+@media (min-width: 1200px) {
+    #postList {
+        grid-template-columns: repeat(6, 1fr);  /* 큰 화면에서 최대 6개 */
+    }
 }
