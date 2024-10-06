@@ -1,5 +1,4 @@
-import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { db } from "./firebase.js";
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
@@ -67,19 +66,8 @@ async function loadAllUsers() {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
-
-                        // 서버로 사용자 삭제 요청 보내기
-                        const response = await fetch(`/deleteUser/${userId}`, {
-                            method: 'DELETE',
-                        });
-
-                        if (response.ok) {
-                            alert('회원이 성공적으로 탈퇴되었습니다.');
-                            loadAllUsers();  // 삭제 후 사용자 목록 갱신
-                        } else {
-                            const errorData = await response.json();
-                            alert('회원 탈퇴 중 오류: ' + errorData.message);
-                        }
+                        alert('회원이 성공적으로 탈퇴되었습니다.');
+                        loadAllUsers();  // 삭제 후 사용자 목록 갱신
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
                         alert('회원 탈퇴 중 오류가 발생했습니다.');
@@ -103,15 +91,11 @@ if (registerForm) {
         const password = document.getElementById('password').value;
         const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
 
-        let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
-
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
             // Firestore에 사용자 정보 저장
-            await setDoc(doc(db, 'users', user.uid), {
-                email: user.email,
+            await setDoc(doc(db, 'users', userId), {
+                email: userId,
+                password: password,
                 role: role  // 선택한 역할 저장
             });
 
@@ -132,11 +116,23 @@ if (loginForm) {
         const userId = document.getElementById('userId').value;
         const password = document.getElementById('password').value;
 
-        let email = convertToEmailFormat(userId);
-
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            window.location.href = '/dashboard.html';
+            // Firestore에서 사용자 정보 확인
+            const docRef = doc(db, 'users', userId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                if (userData.password === password) {
+                    // 로그인 성공
+                    sessionStorage.setItem('userId', userId);  // 세션에 로그인 정보 저장
+                    window.location.href = '/dashboard.html';  // 로그인 후 대시보드로 이동
+                } else {
+                    alert('비밀번호가 잘못되었습니다.');
+                }
+            } else {
+                alert('사용자를 찾을 수 없습니다.');
+            }
         } catch (error) {
             console.error('로그인 오류:', error);
             alert('로그인 실패: ' + error.message);
@@ -148,18 +144,7 @@ if (loginForm) {
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-        signOut(auth).then(() => {
-            window.location.href = '/login.html';
-        }).catch((error) => {
-            console.error("로그아웃 오류:", error.message);
-        });
+        sessionStorage.removeItem('userId');  // 세션에서 로그인 정보 제거
+        window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
     });
-}
-
-// ID를 이메일 형식으로 변환하는 함수
-function convertToEmailFormat(userId) {
-    if (!userId.includes('@')) {
-        return userId + '@example.com';
-    }
-    return userId;
 }
