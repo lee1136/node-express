@@ -79,8 +79,17 @@ h1 {
 }
 
 .half-width {
-    display: inline-block;
-    width: 48%;
+    display: flex;
+    justify-content: space-between;  /* 필드와 단위를 나란히 배치 */
+    width: 100%;
+}
+
+.half-width input[type="number"] {
+    width: 70%;  /* 입력 필드 크기 조정 */
+}
+
+.half-width select {
+    width: 25%;  /* 선택 필드 크기 조정 */
 }
 
 .full-width {
@@ -98,25 +107,11 @@ input[type="text"], input[type="number"], select, textarea {
     padding: 8px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: 100%;
     box-sizing: border-box;
 }
 
 textarea {
     resize: none;
-}
-
-/* 단위를 표시하는 스타일 */
-.with-unit {
-    position: relative;
-}
-
-.with-unit span {
-    position: absolute;
-    right: 10px;
-    top: 35px;
-    font-size: 14px;
-    color: #333;
 }
 
 button {
