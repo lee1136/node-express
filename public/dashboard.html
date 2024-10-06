@@ -9,6 +9,7 @@
 <body>
     <header>
         <h1>게시물 대시보드</h1>
+        <input type="text" id="searchInput" placeholder="품번 검색..."> <!-- 검색 입력 필드 -->
         <button id="uploadBtn" style="display: none;">게시물 업로드</button> <!-- 관리자만 표시 -->
         <button id="signupBtn" style="display: none;">회원가입</button> <!-- 관리자만 표시 -->
         <button id="logoutBtn">로그아웃</button>
@@ -17,11 +18,6 @@
     <section id="postList">
         <!-- 게시물 목록이 여기에 렌더링됩니다 -->
     </section>
-
-    <div id="pagination">
-        <button id="prevBtn" style="display: none;">이전 페이지</button>
-        <button id="nextBtn">다음 페이지</button>
-    </div>
 
     <script src="firebase.js" type="module"></script>
     <script src="dashboard.js" type="module"></script>
