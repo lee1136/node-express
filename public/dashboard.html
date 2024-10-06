@@ -12,11 +12,12 @@
         <button id="uploadBtn" style="display: none;">게시물 업로드</button> <!-- 관리자만 표시 -->
         <button id="logoutBtn">로그아웃</button>
     </header>
+    
     <section id="postList">
         <!-- 게시물 목록이 여기에 렌더링됩니다 -->
     </section>
 
-    <!-- 업로드 폼 -->
+    <!-- 업로드 폼 (관리자 전용) -->
     <div id="uploadModal" style="display: none;">
         <form id="uploadForm">
             <input type="file" id="fileInput" multiple accept="image/*,video/*">
