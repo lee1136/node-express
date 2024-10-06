@@ -5,7 +5,6 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/fir
 
 let existingMedia = [];  // 기존 미디어를 저장할 배열
 let selectedThumbnail = null;
-let postDeleted = false; // 게시물이 삭제되었는지 여부 확인
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -83,25 +82,12 @@ function deleteMediaFile(media, index) {
         deleteObject(mediaRef).then(() => {
             // Firestore에서 해당 미디어 정보 삭제
             existingMedia.splice(index, 1);  // 기존 배열에서 해당 미디어 제거
-            updatePostMedia();  // 수정된 미디어 배열로 업데이트
             displayMediaPreview(existingMedia);  // 미리보기 갱신
             alert('미디어 파일이 삭제되었습니다.');
         }).catch((error) => {
             console.error('미디어 파일 삭제 중 오류:', error);
         });
     }
-}
-
-// 수정된 미디어 배열 Firestore에 업데이트
-function updatePostMedia() {
-    const postRef = doc(db, 'posts', postId);
-    setDoc(postRef, { media: existingMedia }, { merge: true })
-        .then(() => {
-            console.log('미디어 파일이 성공적으로 업데이트되었습니다.');
-        })
-        .catch((error) => {
-            console.error('미디어 업데이트 오류:', error);
-        });
 }
 
 // 게시물 삭제 버튼 클릭 시 게시물 삭제
@@ -120,23 +106,7 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
 
             await Promise.all(deletePromises);
             alert('게시물이 삭제되었습니다.');
-
-            // 게시물이 삭제된 상태로 설정
-            postDeleted = true;
-
-            // 삭제 완료 메시지 후 대시보드로 이동할 버튼 표시
-            const postDeletedMessage = document.createElement('div');
-            postDeletedMessage.innerHTML = `
-                <p>게시물이 삭제되었습니다.</p>
-                <button id="goBackBtn">대시보드로 돌아가기</button>
-            `;
-            document.body.appendChild(postDeletedMessage);
-
-            // "대시보드로 돌아가기" 버튼 클릭 시 대시보드로 이동
-            document.getElementById('goBackBtn').addEventListener('click', () => {
-                window.location.href = '/dashboard.html';
-            });
-
+            window.location.href = '/dashboard.html';  // 삭제 후 대시보드로 이동
         } catch (error) {
             console.error('게시물 삭제 중 오류:', error);
         }
@@ -146,12 +116,6 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
 // 수정 완료 버튼 클릭 시 수정된 데이터 저장
 document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // 게시물이 삭제된 경우 수정 작업을 중지
-    if (postDeleted) {
-        alert('게시물이 삭제되었습니다. 수정할 수 없습니다.');
-        return;
-    }
 
     const productNumber = document.getElementById('productNumber').value;
     const type = document.getElementById('type').value;
