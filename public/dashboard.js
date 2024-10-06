@@ -36,7 +36,7 @@ async function loadPosts(page) {
     try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
 
-        // Firestore에서 게시물을 제대로 가져오지 못했을 때
+        // 게시물이 없는 경우
         if (querySnapshot.empty) {
             console.log("게시물이 없습니다.");
             postList.innerHTML = "<p>게시물이 없습니다.</p>";
@@ -52,7 +52,9 @@ async function loadPosts(page) {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
                 console.log("게시물 데이터:", postData);  // 게시물 데이터를 출력하여 확인
+
                 const postElement = createPostElement(postData, doc.id);
+                console.log("생성된 게시물 요소:", postElement); // 생성된 HTML 요소를 확인
                 postList.appendChild(postElement);
             }
         });
@@ -80,12 +82,12 @@ function createPostElement(postData, postId) {
         console.log("이미지 URL이 없습니다. 기본 이미지로 대체합니다.");
     }
 
+    postDiv.appendChild(img); // 이미지 추가
+
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
         window.location.href = `/detail.html?postId=${postId}`; // 상세 페이지로 이동
     });
-
-    postDiv.appendChild(img);
 
     return postDiv;
 }
@@ -114,7 +116,6 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
         console.error("로그아웃 오류:", error.message);
     });
 });
-
 
 // 업로드 및 회원가입 버튼 클릭 시 페이지 이동
 document.getElementById('uploadBtn').addEventListener('click', () => {
