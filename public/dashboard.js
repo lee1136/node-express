@@ -2,8 +2,9 @@ import { auth, db, storage } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import { getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 로그인된 사용자의 역할 확인
+// 로그인된 사용자의 역할 확인 (관리자면 업로드 버튼 보이기)
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
@@ -12,10 +13,7 @@ onAuthStateChanged(auth, (user) => {
             if (docSnap.exists()) {
                 const userRole = docSnap.data().role;
                 if (userRole === 'admin') {
-                    console.log("관리자입니다.");
                     document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
-                } else {
-                    console.log("일반 사용자입니다.");
                 }
             }
         }).catch((error) => {
@@ -57,6 +55,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         }).then(() => {
             console.log("게시물이 저장되었습니다.");
             document.getElementById('uploadModal').style.display = 'none';
+            loadPosts(); // 업로드 후 게시물 다시 불러오기
         }).catch(error => {
             console.error("게시물 저장 중 오류:", error);
         });
@@ -64,6 +63,40 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         console.error("파일 업로드 오류:", error);
     });
 });
+
+// Firestore에서 게시물 가져오기
+async function loadPosts() {
+    const postList = document.getElementById('postList');
+    postList.innerHTML = '';  // 게시물 목록 초기화
+
+    try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        querySnapshot.forEach((doc) => {
+            const postData = doc.data();
+            const postElement = createPostElement(postData);
+            postList.appendChild(postElement);
+        });
+    } catch (error) {
+        console.error('게시물 불러오기 오류:', error);
+    }
+}
+
+// 게시물 요소 생성 함수
+function createPostElement(postData) {
+    const postDiv = document.createElement('div');
+    postDiv.classList.add('post');
+
+    const img = document.createElement('img');
+    img.src = postData.media[0].url;  // 첫 번째 미디어 파일을 게시물 썸네일로 사용
+    img.alt = postData.media[0].fileName;
+
+    postDiv.appendChild(img);
+
+    return postDiv;
+}
+
+// 페이지 로드 시 게시물 불러오기
+document.addEventListener('DOMContentLoaded', loadPosts);
 
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
