@@ -1,29 +1,34 @@
-import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { db } from "./firebase.js"; // Authentication 없이 Firestore만 사용
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 let postsData = [];  // 전체 게시물 데이터를 저장할 배열
 
 // 로그인된 사용자의 역할 확인 (관리자면 업로드 및 회원가입 버튼 보이기)
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const uid = user.uid;
-        const docRef = doc(db, "users", uid);
-        getDoc(docRef).then((docSnap) => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const userId = sessionStorage.getItem('userId'); // 세션에서 로그인 정보 가져오기
+    if (!userId) {
+        window.location.href = '/login.html';  // 로그인되지 않은 경우 로그인 페이지로 이동
+    } else {
+        // Firestore에서 사용자 역할 가져오기
+        const docRef = doc(db, "users", userId);
+        try {
+            const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const userRole = docSnap.data().role;
                 if (userRole === 'admin') {
                     document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게만 업로드 버튼 표시
                     document.getElementById('signupBtn').style.display = 'block'; // 관리자에게만 회원가입 버튼 표시
                 }
+            } else {
+                console.error('사용자를 찾을 수 없습니다.');
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error("역할 확인 오류:", error);
-        });
-    } else {
-        window.location.href = '/login.html';  // 로그인되지 않은 경우 로그인 페이지로 이동
+        }
     }
+
+    loadPosts(); // 게시물 불러오기
 });
 
 // 검색 입력 필드의 입력 변화 감지
@@ -84,16 +89,10 @@ function createPostElement(postData) {
     return postDiv;
 }
 
-// 페이지 로드 시 게시물 불러오기
-document.addEventListener('DOMContentLoaded', loadPosts);
-
 // 로그아웃 처리
 document.getElementById('logoutBtn').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        window.location.href = '/login.html';
-    }).catch((error) => {
-        console.error("로그아웃 오류:", error.message);
-    });
+    sessionStorage.removeItem('userId');  // 세션에서 로그인 정보 제거
+    window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
 });
 
 // 업로드 버튼 클릭 시 업로드 페이지로 이동
