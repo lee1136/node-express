@@ -56,21 +56,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.deleteUserBtn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const userId = e.target.getAttribute('data-user-id');
-                const confirmDelete = confirm(`정말로 이 회원을 탈퇴시키겠습니까?`);
+                const confirmDelete = confirm('정말로 이 회원을 탈퇴시키겠습니까?');
 
                 if (confirmDelete) {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
-
-                        // Firebase Authentication에서 로그인된 사용자 삭제 (클라이언트 측 제한)
-                        if (auth.currentUser.uid === userId) {
-                            await deleteUser(auth.currentUser);
-                            alert('회원이 탈퇴되었습니다.');
-                            window.location.href = '/login.html'; // 탈퇴 후 로그인 페이지로 이동
-                        } else {
-                            alert('로그인된 사용자의 계정만 삭제할 수 있습니다.');
-                        }
+                        
+                        alert('회원이 탈퇴되었습니다.');
+                        loadAllUsers();  // 삭제 후 사용자 목록 갱신
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
                         alert('회원 탈퇴 중 오류가 발생했습니다.');
@@ -109,8 +103,12 @@ if (registerForm) {
             alert('회원가입이 완료되었습니다.');
             window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
         } catch (error) {
-            console.error('회원가입 오류:', error);
-            alert('회원가입 실패: ' + error.message);
+            if (error.code === 'auth/email-already-in-use') {
+                alert('이미 사용 중인 이메일입니다. 다른 이메일을 사용하세요.');
+            } else {
+                console.error('회원가입 오류:', error);
+                alert('회원가입 실패: ' + error.message);
+            }
         }
     });
 }
@@ -153,4 +151,36 @@ function convertToEmailFormat(userId) {
         return userId + '@example.com';  // 기본 도메인을 추가
     }
     return userId;
+}
+
+// 회원 목록 불러오는 함수
+async function loadAllUsers() {
+    const allUsersInfoDiv = document.getElementById('allUsersInfo');
+
+    try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        let userInfoHTML = '<h3>모든 회원 정보</h3>';
+
+        querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            userInfoHTML += `
+                <div>
+                    <p>아이디: ${userData.email}</p>
+                    <label for="role-${doc.id}">역할:</label>
+                    <select id="role-${doc.id}">
+                        <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
+                        <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
+                    </select>
+                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
+                    <hr>
+                </div>
+            `;
+        });
+
+        allUsersInfoDiv.innerHTML = userInfoHTML;
+
+    } catch (error) {
+        console.error('회원 정보 불러오기 오류:', error);
+    }
 }
