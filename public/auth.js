@@ -4,11 +4,16 @@ import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
 document.addEventListener('DOMContentLoaded', async () => {
+    loadAllUsers();  // 사용자 목록 로드
+});
+
+// 사용자 목록 불러오는 함수
+async function loadAllUsers() {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
     if (!allUsersInfoDiv) {
         console.error('allUsersInfo 요소를 찾을 수 없습니다.');
-        return;  // allUsersInfo 요소가 없으면 코드를 중지시킴
+        return;
     }
 
     try {
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
                     <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button> <!-- 탈퇴 버튼 -->
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
                     <hr>
                 </div>
             `;
@@ -62,7 +67,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
-                        
+
+                        // Firebase Authentication에서 사용자 삭제
+                        const user = await getUserByEmail(userId);
+                        await deleteUser(user);
+
                         alert('회원이 탈퇴되었습니다.');
                         loadAllUsers();  // 삭제 후 사용자 목록 갱신
                     } catch (error) {
@@ -77,7 +86,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('회원 정보 불러오기 오류:', error);
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
     }
-});
+}
+
+// Firebase Authentication에서 이메일로 사용자 정보 가져오기
+async function getUserByEmail(email) {
+    const userList = await auth.fetchSignInMethodsForEmail(email);
+    if (userList.length > 0) {
+        const userRecord = await auth.getUserByEmail(email);
+        return userRecord;
+    } else {
+        throw new Error('해당 이메일로 등록된 사용자를 찾을 수 없습니다.');
+    }
+}
 
 // 회원가입 처리 및 중복 이메일 처리
 const registerForm = document.getElementById('registerForm');
@@ -104,21 +124,19 @@ if (registerForm) {
             window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
-                // 중복 이메일 처리: 이메일에 랜덤 문자열을 추가하여 중복 방지
                 email = addRandomStringToEmail(email);
 
                 try {
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
 
-                    // Firestore에 사용자 정보 저장
                     await setDoc(doc(db, 'users', user.uid), {
                         email: user.email,
-                        role: role  // 선택한 역할 저장
+                        role: role
                     });
 
                     alert('중복된 이메일이 있어서, 새로운 이메일로 가입되었습니다.');
-                    window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
+                    window.location.href = '/dashboard.html';
                 } catch (error) {
                     console.error('회원가입 오류:', error);
                     alert('회원가입 실패: ' + error.message);
@@ -139,11 +157,11 @@ if (loginForm) {
         const userId = document.getElementById('userId').value;
         const password = document.getElementById('password').value;
 
-        let email = convertToEmailFormat(userId);  // ID를 이메일 형식으로 변환
+        let email = convertToEmailFormat(userId);
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            window.location.href = '/dashboard.html';  // 로그인 성공 후 대시보드로 이동
+            window.location.href = '/dashboard.html';
         } catch (error) {
             console.error('로그인 오류:', error);
             alert('로그인 실패: ' + error.message);
@@ -156,7 +174,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         signOut(auth).then(() => {
-            window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
+            window.location.href = '/login.html';
         }).catch((error) => {
             console.error("로그아웃 오류:", error.message);
         });
@@ -166,46 +184,14 @@ if (logoutBtn) {
 // ID를 이메일 형식으로 변환하는 함수
 function convertToEmailFormat(userId) {
     if (!userId.includes('@')) {
-        return userId + '@example.com';  // 기본 도메인을 추가
+        return userId + '@example.com';
     }
     return userId;
 }
 
 // 이메일에 랜덤 문자열 추가 함수 (중복 이메일 해결)
 function addRandomStringToEmail(email) {
-    const randomString = Math.random().toString(36).substring(2, 10);  // 랜덤 문자열 생성
+    const randomString = Math.random().toString(36).substring(2, 10);
     const emailParts = email.split('@');
-    return `${emailParts[0]}+${randomString}@${emailParts[1]}`;  // 예: user+randomString@example.com
-}
-
-// 회원 목록 불러오는 함수
-async function loadAllUsers() {
-    const allUsersInfoDiv = document.getElementById('allUsersInfo');
-
-    try {
-        const querySnapshot = await getDocs(collection(db, 'users'));
-        let userInfoHTML = '<h3>모든 회원 정보</h3>';
-
-        querySnapshot.forEach((doc) => {
-            const userData = doc.data();
-            userInfoHTML += `
-                <div>
-                    <p>아이디: ${userData.email}</p>
-                    <label for="role-${doc.id}">역할:</label>
-                    <select id="role-${doc.id}">
-                        <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
-                        <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
-                    </select>
-                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
-                    <hr>
-                </div>
-            `;
-        });
-
-        allUsersInfoDiv.innerHTML = userInfoHTML;
-
-    } catch (error) {
-        console.error('회원 정보 불러오기 오류:', error);
-    }
+    return `${emailParts[0]}+${randomString}@${emailParts[1]}`;
 }
