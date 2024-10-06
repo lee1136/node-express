@@ -29,9 +29,10 @@ async function loadPostDetail() {
             const postData = docSnap.data();
             // 품번 표시
             document.getElementById('productNumber').innerText = `No. ${postData.productNumber}`;
-            // 상세 정보 표시
+
+            // 상세 정보 표시 (비디오 무한 반복 및 자동 재생)
             postDetail.innerHTML = `
-                <video src="${postData.media[0].url}" class="post-video" controls></video> <!-- 중앙에 비디오 -->
+                <video src="${postData.media[0].url}" class="post-video" controls autoplay loop></video> <!-- 중앙에 비디오, 무한 반복 -->
                 <div class="image-gallery">
                     ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
