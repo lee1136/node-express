@@ -1,4 +1,4 @@
-import { auth, db, storage } from "./firebase.js";
+import { db, storage } from "./firebase.js";  // auth 제거
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
@@ -62,6 +62,13 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     const files = document.getElementById('fileInput').files;
     const uploadPromises = [];
 
+    // 사용자 ID는 세션 스토리지에서 가져오기 (auth 대신)
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) {
+        console.error('로그인된 사용자 정보가 없습니다.');
+        return;
+    }
+
     // 파일 업로드 처리
     Array.from(files).forEach(file => {
         const storageRef = ref(storage, 'uploads/' + file.name);
@@ -87,7 +94,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
             media: mediaFiles,  // 미디어 파일 배열
             thumbnail: thumbnailURL,  // 선택한 썸네일 URL 저장
             createdAt: new Date(),
-            createdBy: auth.currentUser.uid
+            createdBy: userId  // 세션에서 가져온 사용자 ID로 저장
         }).then(() => {
             console.log("게시물이 저장되었습니다.");
             window.location.href = '/dashboard.html';  // 업로드 완료 후 대시보드로 이동
