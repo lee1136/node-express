@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    // Firestore에 사용자 정보 및 역할(role)을 저장
+                    // Firestore에 사용자 정보 저장 (기본으로 'user'로 저장)
                     return setDoc(doc(db, "users", user.uid), {
                         email: user.email,
                         role: 'user'  // 기본적으로 일반 사용자로 설정
