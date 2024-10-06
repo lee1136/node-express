@@ -1,6 +1,6 @@
 import { auth, db, storage } from "./firebase.js";
-import { getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+import { getDoc, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 let existingMedia = [];  // 기존 미디어를 저장할 배열
@@ -59,6 +59,29 @@ function displayMediaPreview(mediaFiles) {
         mediaPreview.appendChild(mediaElement);
     });
 }
+
+// 게시물 삭제 버튼 클릭 시 게시물 삭제
+document.getElementById('deleteBtn').addEventListener('click', async () => {
+    const confirmDelete = confirm('정말로 이 게시물을 삭제하시겠습니까?');
+    if (confirmDelete) {
+        try {
+            // Firestore에서 게시물 삭제
+            await deleteDoc(doc(db, 'posts', postId));
+
+            // Firebase Storage에서 관련 미디어 삭제
+            const deletePromises = existingMedia.map(media => {
+                const storageRef = ref(storage, 'uploads/' + media.fileName);
+                return deleteObject(storageRef);
+            });
+
+            await Promise.all(deletePromises);
+            alert('게시물이 삭제되었습니다.');
+            window.location.href = '/dashboard.html';  // 삭제 후 대시보드로 이동
+        } catch (error) {
+            console.error('게시물 삭제 중 오류:', error);
+        }
+    }
+});
 
 // 수정 완료 버튼 클릭 시 수정된 데이터 저장
 document.getElementById('editForm').addEventListener('submit', async (e) => {
