@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시물 업로드</title>
+    <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+    <header>
+        <h1>게시물 업로드</h1>
+        <button id="backBtn">뒤로 가기</button>
+    </header>
+
+    <section id="uploadSection">
+        <form id="uploadForm">
+            <input type="file" id="fileInput" multiple accept="image/*,video/*">
+            <button type="submit">업로드</button>
+        </form>
+    </section>
+
+    <script src="firebase.js" type="module"></script>
+    <script src="upload.js" type="module"></script>
+</body>
+</html>
