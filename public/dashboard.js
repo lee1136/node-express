@@ -1,7 +1,6 @@
-import { auth, db, storage } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 로그인된 사용자의 역할 확인 (관리자면 업로드 버튼 보이기)
@@ -24,44 +23,9 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 게시물 업로드 모달 열기
+// 업로드 버튼 클릭 시 업로드 페이지로 이동
 document.getElementById('uploadBtn').addEventListener('click', () => {
-    document.getElementById('uploadModal').style.display = 'block';
-});
-
-// 파일 업로드 및 Firestore에 게시물 저장
-document.getElementById('uploadForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const files = document.getElementById('fileInput').files;
-    const uploadPromises = [];
-
-    Array.from(files).forEach(file => {
-        const storageRef = ref(storage, 'uploads/' + file.name);
-        const uploadTask = uploadBytes(storageRef, file).then(snapshot => {
-            return getDownloadURL(snapshot.ref).then(downloadURL => {
-                return { fileName: file.name, url: downloadURL, type: file.type };
-            });
-        });
-        uploadPromises.push(uploadTask);
-    });
-
-    // 모든 파일 업로드 완료 후 Firestore에 저장
-    Promise.all(uploadPromises).then(mediaFiles => {
-        const postId = `post_${Date.now()}`;
-        setDoc(doc(db, "posts", postId), {
-            media: mediaFiles,
-            createdAt: new Date(),
-            createdBy: auth.currentUser.uid
-        }).then(() => {
-            console.log("게시물이 저장되었습니다.");
-            document.getElementById('uploadModal').style.display = 'none';
-            loadPosts(); // 업로드 후 게시물 다시 불러오기
-        }).catch(error => {
-            console.error("게시물 저장 중 오류:", error);
-        });
-    }).catch(error => {
-        console.error("파일 업로드 오류:", error);
-    });
+    window.location.href = '/upload.html';  // 업로드 페이지로 이동
 });
 
 // Firestore에서 게시물 가져오기
