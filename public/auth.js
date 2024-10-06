@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
@@ -68,12 +68,18 @@ async function loadAllUsers() {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
 
-                        // Firebase Authentication에서 사용자 삭제
-                        const user = await getUserByEmail(userId);
-                        await deleteUser(user);
+                        // 서버로 사용자 삭제 요청 보내기
+                        const response = await fetch(`/deleteUser/${userId}`, {
+                            method: 'DELETE',
+                        });
 
-                        alert('회원이 탈퇴되었습니다.');
-                        loadAllUsers();  // 삭제 후 사용자 목록 갱신
+                        if (response.ok) {
+                            alert('회원이 성공적으로 탈퇴되었습니다.');
+                            loadAllUsers();  // 삭제 후 사용자 목록 갱신
+                        } else {
+                            const errorData = await response.json();
+                            alert('회원 탈퇴 중 오류: ' + errorData.message);
+                        }
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
                         alert('회원 탈퇴 중 오류가 발생했습니다.');
@@ -85,17 +91,6 @@ async function loadAllUsers() {
     } catch (error) {
         console.error('회원 정보 불러오기 오류:', error);
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
-    }
-}
-
-// Firebase Authentication에서 이메일로 사용자 정보 가져오기
-async function getUserByEmail(email) {
-    const userList = await auth.fetchSignInMethodsForEmail(email);
-    if (userList.length > 0) {
-        const userRecord = await auth.getUserByEmail(email);
-        return userRecord;
-    } else {
-        throw new Error('해당 이메일로 등록된 사용자를 찾을 수 없습니다.');
     }
 }
 
@@ -123,28 +118,8 @@ if (registerForm) {
             alert('회원가입이 완료되었습니다.');
             window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
         } catch (error) {
-            if (error.code === 'auth/email-already-in-use') {
-                email = addRandomStringToEmail(email);
-
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-
-                    await setDoc(doc(db, 'users', user.uid), {
-                        email: user.email,
-                        role: role
-                    });
-
-                    alert('중복된 이메일이 있어서, 새로운 이메일로 가입되었습니다.');
-                    window.location.href = '/dashboard.html';
-                } catch (error) {
-                    console.error('회원가입 오류:', error);
-                    alert('회원가입 실패: ' + error.message);
-                }
-            } else {
-                console.error('회원가입 오류:', error);
-                alert('회원가입 실패: ' + error.message);
-            }
+            console.error('회원가입 오류:', error);
+            alert('회원가입 실패: ' + error.message);
         }
     });
 }
@@ -187,11 +162,4 @@ function convertToEmailFormat(userId) {
         return userId + '@example.com';
     }
     return userId;
-}
-
-// 이메일에 랜덤 문자열 추가 함수 (중복 이메일 해결)
-function addRandomStringToEmail(email) {
-    const randomString = Math.random().toString(36).substring(2, 10);
-    const emailParts = email.split('@');
-    return `${emailParts[0]}+${randomString}@${emailParts[1]}`;
 }
