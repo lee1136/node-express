@@ -51,8 +51,8 @@ function createPostElement(postData) {
     postDiv.classList.add('post');
 
     const img = document.createElement('img');
-    img.src = postData.media[0].url;  // 첫 번째 미디어 파일을 게시물 썸네일로 사용
-    img.alt = postData.media[0].fileName;
+    img.src = postData.thumbnail || postData.media[0].url;  // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
+    img.alt = postData.productNumber;
 
     postDiv.appendChild(img);
 
