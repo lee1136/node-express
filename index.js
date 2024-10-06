@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const path = require('path');
 
 // Firebase Admin SDK 초기화 (serviceAccountKey.json 파일 경로를 설정)
-const serviceAccount = require('./path/to/serviceAccountKey.json');
+const serviceAccount = require('./public/firebase.js');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
