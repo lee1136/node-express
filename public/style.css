@@ -1,28 +1,27 @@
 /* 전체 페이지 스타일 */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* 위쪽 정렬 */
+    align-items: center;
     height: 100vh;
     background-color: #f0f4f8;
 }
 
-/* 로그인 컨테이너 스타일 */
+/* 로그인 컨테이너 */
 .login-container {
     background-color: white;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
     width: 100%;
     max-width: 400px;
-    margin-top: 20px; /* 상단에 여유 공간을 두기 위한 설정 */
+    text-align: center;
 }
 
-/* 제목 스타일 */
+/* 제목 */
 h1 {
     margin-bottom: 20px;
     color: #0047ab;
@@ -51,40 +50,27 @@ input {
     box-sizing: border-box;
 }
 
-input:focus {
-    border-color: #0047ab;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 71, 171, 0.2);
-}
-
-/* 버튼 스타일 */
-button {
-    padding: 12px;
+/* 로그인 버튼 스타일 */
+.login-btn {
     background-color: #0047ab;
     color: white;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 10px;
+    height: 60px;  /* 버튼의 높이를 설정 */
+    vertical-align: top; /* 텍스트를 위로 배치 */
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+    padding-top: 5px; /* 텍스트와 버튼 상단 간격 */
 }
 
-button:hover {
+.login-btn:hover {
     background-color: #003580;
 }
 
-/* 하단 텍스트 및 링크 스타일 */
-p {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #555;
-}
-
-a {
-    color: #0047ab;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
+input:focus {
+    border-color: #0047ab;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 71, 171, 0.2);
 }
