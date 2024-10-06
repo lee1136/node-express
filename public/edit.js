@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/fir
 
 let existingMedia = [];  // 기존 미디어를 저장할 배열
 let selectedThumbnail = null;
+let postDeleted = false; // 게시물이 삭제되었는지 여부 확인
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -119,7 +120,10 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
 
             await Promise.all(deletePromises);
             alert('게시물이 삭제되었습니다.');
-            
+
+            // 게시물이 삭제된 상태로 설정
+            postDeleted = true;
+
             // 삭제 완료 메시지 후 대시보드로 이동할 버튼 표시
             const postDeletedMessage = document.createElement('div');
             postDeletedMessage.innerHTML = `
@@ -142,6 +146,12 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
 // 수정 완료 버튼 클릭 시 수정된 데이터 저장
 document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // 게시물이 삭제된 경우 수정 작업을 중지
+    if (postDeleted) {
+        alert('게시물이 삭제되었습니다. 수정할 수 없습니다.');
+        return;
+    }
 
     const productNumber = document.getElementById('productNumber').value;
     const type = document.getElementById('type').value;
