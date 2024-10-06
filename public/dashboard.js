@@ -43,6 +43,7 @@ async function loadPosts(page) {
         querySnapshot.forEach((doc, index) => {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
+                console.log(postData);  // 게시물 데이터를 출력하여 확인
                 const postElement = createPostElement(postData, doc.id);
                 postList.appendChild(postElement);
             }
@@ -62,7 +63,8 @@ function createPostElement(postData, postId) {
     postDiv.classList.add('post');
 
     const img = document.createElement('img');
-    img.src = postData.thumbnail || postData.media[0].url; // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
+    img.src = postData.thumbnail || postData.media[0]?.url || ''; // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
+    img.alt = postData.title || '게시물 이미지'; // 이미지 대체 텍스트 추가
 
     // 게시물 클릭 시 상세 페이지로 이동
     postDiv.addEventListener('click', () => {
@@ -88,16 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage++;
         loadPosts(currentPage);
     });
-
-    // 업로드 버튼 클릭 이벤트
-    document.getElementById('uploadBtn').addEventListener('click', () => {
-        window.location.href = '/upload.html'; // 업로드 페이지로 이동
-    });
-
-    // 회원가입 버튼 클릭 이벤트
-    document.getElementById('signupBtn').addEventListener('click', () => {
-        window.location.href = '/signup.html'; // 회원가입 페이지로 이동
-    });
 });
 
 // 로그아웃 처리
@@ -107,4 +99,13 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     }).catch((error) => {
         console.error("로그아웃 오류:", error.message);
     });
+});
+
+// 업로드 및 회원가입 버튼 클릭 시 페이지 이동
+document.getElementById('uploadBtn').addEventListener('click', () => {
+    window.location.href = '/upload.html'; // 업로드 페이지로 이동
+});
+
+document.getElementById('signupBtn').addEventListener('click', () => {
+    window.location.href = '/register.html'; // 회원가입 페이지로 이동
 });
