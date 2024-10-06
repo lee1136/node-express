@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const path = require('path');
 
 // Firebase Admin SDK 초기화
-const serviceAccount = require('./path/to/serviceAccountKey.json'); // Firebase 서비스 계정 키 경로
+const serviceAccount = require('./serviceAccountKey.json'); // Firebase 서비스 계정 키 경로
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://your-database-name.firebaseio.com"
