@@ -54,6 +54,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 페이지가 로드되면 기존 회원 정보를 가져옴
+document.addEventListener('DOMContentLoaded', () => {
+    const userInfoDiv = document.getElementById('userInfo');
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    userInfoDiv.innerHTML = `
+                        <p>로그인된 사용자: ${userData.email}</p>
+                        <p>역할: ${userData.role}</p>
+                        <button id="logoutBtn">로그아웃</button>
+                    `;
+                    setupLogout();
+                } else {
+                    userInfoDiv.innerHTML = '<p>사용자 정보를 가져올 수 없습니다.</p>';
+                }
+            } catch (error) {
+                console.error('회원 정보 불러오기 오류:', error);
+                userInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
+            }
+        } else {
+            userInfoDiv.innerHTML = '<p>로그인된 사용자가 없습니다.</p>';
+        }
+    });
+});
+
+    
     // 로그아웃 처리
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
