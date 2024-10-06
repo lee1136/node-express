@@ -2,47 +2,27 @@ import { auth, db } from "./firebase.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import { setDoc, doc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 페이지가 로드되면 모든 회원 정보를 가져옴 (관리자만)
+// 페이지가 로드되면 모든 회원 정보를 가져옴
 document.addEventListener('DOMContentLoaded', async () => {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
     try {
-        const user = auth.currentUser;
-        if (user) {
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        let userInfoHTML = '<h3>모든 회원 정보</h3>';
 
-            if (docSnap.exists() && docSnap.data().role === 'admin') {
-                const querySnapshot = await getDocs(collection(db, 'users'));
-                let userInfoHTML = '<h3>모든 회원 정보</h3>';
+        querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            userInfoHTML += `
+                <p>아이디: ${userData.email}</p>
+                <p>역할: ${userData.role}</p>
+                <hr>
+            `;
+        });
 
-                querySnapshot.forEach((doc) => {
-                    const userData = doc.data();
-                    userInfoHTML += `
-                        <p>아이디: ${userData.email}</p>
-                        <p>역할: ${userData.role}</p>
-                        <hr>
-                    `;
-                });
-
-                if (allUsersInfoDiv) {
-                    allUsersInfoDiv.innerHTML = userInfoHTML;
-                }
-            } else {
-                if (allUsersInfoDiv) {
-                    allUsersInfoDiv.innerHTML = '<p>관리자 권한이 없습니다.</p>';
-                }
-            }
-        } else {
-            if (allUsersInfoDiv) {
-                allUsersInfoDiv.innerHTML = '<p>로그인된 사용자가 없습니다.</p>';
-            }
-        }
+        allUsersInfoDiv.innerHTML = userInfoHTML;
     } catch (error) {
         console.error('회원 정보 불러오기 오류:', error);
-        if (allUsersInfoDiv) {
-            allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
-        }
+        allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
     }
 
     // 회원가입 처리
