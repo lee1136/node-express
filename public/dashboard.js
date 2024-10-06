@@ -3,20 +3,26 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
-// 사용자의 역할에 따라 업로드 버튼 표시
+// 로그인된 사용자의 역할 확인
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
         const docRef = doc(db, "users", uid);
         getDoc(docRef).then((docSnap) => {
-            if (docSnap.exists() && docSnap.data().role === 'admin') {
-                document.getElementById('uploadBtn').style.display = 'block'; // 관리자만 업로드 버튼 표시
+            if (docSnap.exists()) {
+                const userRole = docSnap.data().role;
+                if (userRole === 'admin') {
+                    console.log("관리자입니다.");
+                    document.getElementById('uploadBtn').style.display = 'block'; // 관리자에게 업로드 버튼 표시
+                } else {
+                    console.log("일반 사용자입니다.");
+                }
             }
         }).catch((error) => {
             console.error("역할 확인 오류:", error);
         });
     } else {
-        window.location.href = '/login.html';
+        window.location.href = '/login.html';  // 로그인되지 않은 경우 로그인 페이지로 이동
     }
 });
 
