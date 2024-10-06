@@ -81,7 +81,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
             size: `${size} ${sizeUnit}`,
             weight: `${weight}g`,
             additionalContent,
-            media: mediaFiles,
+            media: mediaFiles,  // 미디어 파일 배열
             thumbnail: thumbnailURL,  // 선택한 썸네일 URL 저장
             createdAt: new Date(),
             createdBy: auth.currentUser.uid
