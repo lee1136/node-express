@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
@@ -28,8 +28,8 @@ async function loadAllUsers() {
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
-                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}">탈퇴</button>
+                    <button class="updateRoleBtn" data-user-id="${doc.id}" data-email="${userData.email}">역할 수정</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
                     <hr>
                 </div>
             `;
@@ -65,7 +65,17 @@ async function loadAllUsers() {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
-                        alert('회원이 탈퇴되었습니다.');
+
+                        // Firebase Authentication에서 사용자 삭제
+                        const user = auth.currentUser;
+
+                        if (user.email === e.target.getAttribute('data-email')) {
+                            await deleteUser(user);
+                            alert('회원이 삭제되었습니다.');
+                        } else {
+                            alert('회원 탈퇴를 위해 관리자 인증이 필요합니다.');
+                        }
+
                         loadAllUsers();  // 삭제 후 사용자 목록 갱신
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
