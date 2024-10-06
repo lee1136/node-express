@@ -10,22 +10,22 @@ let currentPage = 1;
 async function loadPosts(page) {
     const postList = document.getElementById('postList');
     postList.innerHTML = '';  // 게시물 목록 초기화
+    console.log('Firestore에서 데이터 가져오기 시작...');
 
     try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
 
-        // Firestore에서 게시물을 제대로 가져오지 못했을 때
         if (querySnapshot.empty) {
             console.log("게시물이 없습니다.");
             postList.innerHTML = "<p>게시물이 없습니다.</p>";
             return;
         }
 
-        const totalPosts = querySnapshot.size; // 전체 게시물 수
-        const startIndex = (page - 1) * postsPerPage; // 현재 페이지의 시작 인덱스
-        const endIndex = Math.min(startIndex + postsPerPage, totalPosts); // 현재 페이지의 끝 인덱스
+        console.log(`총 ${querySnapshot.size}개의 게시물이 있습니다.`); // 데이터가 제대로 가져와지는지 확인
+        const totalPosts = querySnapshot.size;
+        const startIndex = (page - 1) * postsPerPage;
+        const endIndex = Math.min(startIndex + postsPerPage, totalPosts);
 
-        // 게시물 목록을 페이지에 맞게 추가
         querySnapshot.forEach((doc, index) => {
             if (index >= startIndex && index < endIndex) {
                 const postData = doc.data();
@@ -39,6 +39,7 @@ async function loadPosts(page) {
 
                 const postElement = createPostElement(postData, doc.id);
                 postList.appendChild(postElement);
+                console.log("게시물 요소가 추가되었습니다."); // HTML 요소가 추가되었는지 확인
             }
         });
 
@@ -78,6 +79,7 @@ function createPostElement(postData, postId) {
 
 // 페이지 로드 시 게시물 불러오기
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("페이지가 로드되었습니다.");
     loadPosts(currentPage);
 
     // 페이지 버튼 클릭 이벤트
