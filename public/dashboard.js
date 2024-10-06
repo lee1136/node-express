@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getDocs, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";  // doc과 getDoc 추가
 
 // 페이지에 표시할 게시물 수와 현재 페이지 번호
 const postsPerPage = 10; // 한 페이지에 표시할 게시물 수
