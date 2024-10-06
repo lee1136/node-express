@@ -1,10 +1,9 @@
 import { auth, db, storage } from "./firebase.js";
 import { getDoc, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 let existingMedia = [];  // 기존 미디어를 저장할 배열
-let selectedThumbnail = null;
+let selectedThumbnail = null;  // 선택된 썸네일
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -80,10 +79,10 @@ function deleteMediaFile(media, index) {
 
         // Firebase Storage에서 삭제
         deleteObject(mediaRef).then(() => {
-            // Firestore에서 해당 미디어 정보 삭제
-            existingMedia.splice(index, 1);  // 기존 배열에서 해당 미디어 제거
+            // 미디어 삭제 후 Firestore에서 해당 미디어 정보를 바로 업데이트하지 않음
+            existingMedia.splice(index, 1);  // 배열에서 해당 미디어 제거
             displayMediaPreview(existingMedia);  // 미리보기 갱신
-            alert('미디어 파일이 삭제되었습니다.');
+            alert('미디어 파일이 삭제되었습니다. 계속 수정할 수 있습니다.');
         }).catch((error) => {
             console.error('미디어 파일 삭제 중 오류:', error);
         });
