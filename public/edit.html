@@ -23,11 +23,13 @@
                 </div>
             </div>
 
+            <!-- 품번 입력 -->
             <div class="half-width">
                 <label for="productNumber">품번:</label>
                 <input type="text" id="productNumber" required>
             </div>
 
+            <!-- 종류 선택 -->
             <div class="half-width">
                 <label for="type">종류:</label>
                 <select id="type" required>
@@ -38,6 +40,7 @@
                 </select>
             </div>
 
+            <!-- 사이즈 입력 -->
             <div class="half-width">
                 <label for="size">사이즈:</label>
                 <input type="number" id="size" step="0.01" required>
@@ -47,17 +50,20 @@
                 </select>
             </div>
 
+            <!-- 중량 입력 -->
             <div class="half-width">
                 <label for="weight">중량:</label>
                 <input type="number" id="weight" step="0.01" required>
                 <span>g</span>
             </div>
 
+            <!-- 추가 내용 입력 -->
             <div class="full-width">
                 <label for="additionalContent">추가 내용:</label>
                 <textarea id="additionalContent" rows="4"></textarea>
             </div>
 
+            <!-- 수정 완료 및 게시물 삭제 버튼 -->
             <button type="submit" id="submitBtn">수정 완료</button>
             <button type="button" id="deleteBtn">게시물 삭제</button>
         </form>
