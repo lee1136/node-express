@@ -1,6 +1,5 @@
-import { auth, db } from "./firebase.js";
+import { db } from "./firebase.js";
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -47,23 +46,23 @@ async function loadPostDetail() {
                 </div>
             `;
 
-            // 관리자일 경우 수정하기 버튼 보이기
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    const uid = user.uid;
-                    const docRef = doc(db, "users", uid);
-                    getDoc(docRef).then((docSnap) => {
-                        if (docSnap.exists()) {
-                            const userRole = docSnap.data().role;
-                            if (userRole === 'admin') {
-                                document.getElementById('editBtn').style.display = 'block'; // 관리자에게만 수정하기 버튼 표시
-                            }
-                        }
-                    }).catch((error) => {
-                        console.error("역할 확인 오류:", error);
-                    });
+            // 세션에서 사용자 ID 가져오기
+            const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userRole = userSnap.data().role;
+                    if (userRole === 'admin') {
+                        document.getElementById('editBtn').style.display = 'block'; // 관리자에게만 수정하기 버튼 표시
+                    }
+                } else {
+                    console.error('사용자 정보를 찾을 수 없습니다.');
                 }
-            });
+            } else {
+                console.error('로그인된 사용자 정보가 없습니다.');
+            }
 
             // 이미지 클릭 시 모달 열기
             document.querySelectorAll('.gallery-image').forEach(image => {
