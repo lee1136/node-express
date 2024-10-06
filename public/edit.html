@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시물 수정</title>
+    <link rel="stylesheet" href="edit.css">
+</head>
+<body>
+    <header>
+        <h1>게시물 수정</h1>
+        <button id="backBtn">뒤로 가기</button>
+    </header>
+
+    <section id="editSection">
+        <form id="editForm">
+            <div class="half-width">
+                <label for="productNumber">품번:</label>
+                <input type="text" id="productNumber" required>
+            </div>
+
+            <div class="half-width">
+                <label for="type">종류:</label>
+                <select id="type" required>
+                    <option value="14K">14K</option>
+                    <option value="18K">18K</option>
+                    <option value="24K">24K</option>
+                    <option value="925">925</option>
+                </select>
+            </div>
+
+            <div class="half-width">
+                <label for="size">사이즈:</label>
+                <input type="number" id="size" step="0.01" required>
+                <select id="sizeUnit" required>
+                    <option value="cm">cm</option>
+                    <option value="호">호</option>
+                </select>
+            </div>
+
+            <div class="half-width">
+                <label for="weight">중량:</label>
+                <input type="number" id="weight" step="0.01" required>
+                <span>g</span>
+            </div>
+
+            <div class="full-width">
+                <label for="additionalContent">추가 내용:</label>
+                <textarea id="additionalContent" rows="4"></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">수정 완료</button>
+        </form>
+    </section>
+
+    <script src="firebase.js" type="module"></script>
+    <script src="edit.js" type="module"></script>
+</body>
+</html>
