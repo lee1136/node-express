@@ -46,7 +46,7 @@ h1 {
 
 .post-video {
     width: 100%;
-    max-width: 700px; /* 동영상 최대 폭을 더 크게 설정 */
+    max-width: 700px;  /* 동영상 최대 크기 */
     border-radius: 10px;
     margin-bottom: 20px;
 }
@@ -57,7 +57,7 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 700px; /* 정보 영역 최대 폭 조정 */
+    max-width: 700px;  /* 정보 영역 최대 폭 */
 }
 
 .post-info h2 {
@@ -70,16 +70,18 @@ h1 {
     font-size: 16px;
 }
 
+/* 이미지 갤러리 스타일 */
 .image-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));  /* 최소 120px, 최대 6개씩 가로로 배치 */
+    gap: 10px;  /* 이미지 간격 */
+    justify-items: center;  /* 이미지 중앙 정렬 */
 }
 
 .image-gallery img {
-    width: 45%;  /* 이미지 크기를 45%로 조정 */
-    height: auto;
-    margin: 10px;
+    width: 100%;
+    padding-top: 100%;  /* 정사각형 비율 유지 */
+    object-fit: cover;  /* 이미지가 정사각형을 꽉 채우도록 설정 */
     border-radius: 5px;
     cursor: pointer;
 }
