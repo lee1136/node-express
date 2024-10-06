@@ -3,10 +3,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, de
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴
-document.addEventListener('DOMContentLoaded', loadAllUsers);
-
-// 회원 목록을 불러오는 함수
-async function loadAllUsers() {
+document.addEventListener('DOMContentLoaded', async () => {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
 
     if (!allUsersInfoDiv) {
@@ -28,8 +25,8 @@ async function loadAllUsers() {
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
-                    <button class="updateRoleBtn" data-user-id="${doc.id}" data-email="${userData.email}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
+                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button> <!-- 탈퇴 버튼 -->
                     <hr>
                 </div>
             `;
@@ -59,23 +56,19 @@ async function loadAllUsers() {
         document.querySelectorAll('.deleteUserBtn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const userId = e.target.getAttribute('data-user-id');
-                const confirmDelete = confirm('정말로 이 회원을 탈퇴시키겠습니까?');
+                const userEmail = e.target.getAttribute('data-email');
+                const confirmDelete = confirm(`정말로 이 회원(${userEmail})을 탈퇴시키겠습니까?`);
 
                 if (confirmDelete) {
                     try {
                         // Firestore에서 사용자 정보 삭제
                         await deleteDoc(doc(db, 'users', userId));
 
-                        // Firebase Authentication에서 사용자 삭제
-                        const user = auth.currentUser;
+                        // Firebase Authentication에서 사용자 정보 삭제
+                        const user = await getUserByEmail(userEmail);  // 이메일로 사용자 정보 가져오기
+                        await deleteUser(user);
 
-                        if (user.email === e.target.getAttribute('data-email')) {
-                            await deleteUser(user);
-                            alert('회원이 삭제되었습니다.');
-                        } else {
-                            alert('회원 탈퇴를 위해 관리자 인증이 필요합니다.');
-                        }
-
+                        alert('회원이 탈퇴되었습니다.');
                         loadAllUsers();  // 삭제 후 사용자 목록 갱신
                     } catch (error) {
                         console.error('회원 탈퇴 중 오류:', error);
@@ -88,6 +81,17 @@ async function loadAllUsers() {
     } catch (error) {
         console.error('회원 정보 불러오기 오류:', error);
         allUsersInfoDiv.innerHTML = '<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>';
+    }
+});
+
+// Firebase Authentication에서 이메일로 사용자 정보 가져오기
+async function getUserByEmail(email) {
+    const userList = await auth.fetchSignInMethodsForEmail(email);
+    if (userList.length > 0) {
+        const userRecord = await auth.getUserByEmail(email);
+        return userRecord;
+    } else {
+        throw new Error('해당 이메일로 등록된 사용자를 찾을 수 없습니다.');
     }
 }
 
