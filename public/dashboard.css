@@ -19,7 +19,7 @@ h1 {
 
 #postList {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 그리드 */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 가로로 2~6개 배치 */
     gap: 10px; /* 그리드 간격 */
     padding: 20px;
 }
@@ -68,4 +68,3 @@ button {
 button:hover {
     background-color: #003580; /* 호버 시 어두운 파란색 */
 }
-
