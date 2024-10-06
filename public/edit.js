@@ -88,6 +88,24 @@ function deleteMediaFile(media, index) {
     }
 }
 
+// 새 파일을 업로드할 때 실시간 미리보기 추가
+document.getElementById('fileInput').addEventListener('change', (event) => {
+    const files = event.target.files;
+    const mediaPreview = document.getElementById('mediaPreview');
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const newMediaElement = document.createElement(file.type.includes('video') ? 'video' : 'img');
+            newMediaElement.src = e.target.result;
+            newMediaElement.controls = file.type.includes('video');
+            newMediaElement.classList.add('media-item');
+            mediaPreview.appendChild(newMediaElement);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+
 // 게시물 삭제 버튼 클릭 시 게시물 삭제
 document.getElementById('deleteBtn').addEventListener('click', async () => {
     const confirmDelete = confirm('정말로 이 게시물을 삭제하시겠습니까?');
