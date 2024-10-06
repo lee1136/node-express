@@ -86,9 +86,9 @@ h1 {
 }
 
 .image-gallery img {
-    width: calc(100% / 6 - 10px);  /* 최대 6개씩 가로 배치되도록 계산 */
-    height: auto;
-    object-fit: cover;  /* 정사각형 유지 */
+    width: 150px;  /* 정사각형 고정 크기 */
+    height: 150px; /* 정사각형 고정 크기 */
+    object-fit: cover;  /* 이미지를 정사각형으로 자르지 않고 꽉 채움 */
     border-radius: 5px;
     cursor: pointer;
 }
