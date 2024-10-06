@@ -23,12 +23,14 @@ async function loadPostDetail() {
             const postData = docSnap.data();
             // 상세 정보 표시
             postDetail.innerHTML = `
-                <h2>${postData.productNumber}</h2>
-                <img src="${postData.thumbnail}" alt="${postData.productNumber}">
-                <p>종류: ${postData.type}</p>
-                <p>사이즈: ${postData.size}</p>
-                <p>중량: ${postData.weight}</p>
-                <p>추가 내용: ${postData.additionalContent}</p>
+                <img src="${postData.thumbnail}" alt="${postData.productNumber}" class="post-image">
+                <div class="post-info">
+                    <h2>${postData.productNumber}</h2>
+                    <p>종류: ${postData.type}</p>
+                    <p>사이즈: ${postData.size}</p>
+                    <p>중량: ${postData.weight}</p>
+                    <p>추가 내용: ${postData.additionalContent}</p>
+                </div>
             `;
         } else {
             postDetail.innerHTML = '<p>게시물을 찾을 수 없습니다.</p>';
