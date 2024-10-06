@@ -1,9 +1,15 @@
 import { auth, db } from "./firebase.js";
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
     window.history.back();  // 이전 페이지로 이동
+});
+
+// 수정하기 버튼 클릭 시 수정 페이지로 이동
+document.getElementById('editBtn').addEventListener('click', () => {
+    window.location.href = `/edit.html?postId=${postId}`; // 수정 페이지로 이동, postId를 쿼리 파라미터로 전달
 });
 
 // 게시물 ID 가져오기
@@ -21,8 +27,9 @@ async function loadPostDetail() {
 
         if (docSnap.exists()) {
             const postData = docSnap.data();
+            // 품번 표시
+            document.getElementById('productNumber').innerText = `No. ${postData.productNumber}`;
             // 상세 정보 표시
-            document.getElementById('productNumber').innerText = `No. ${postData.productNumber}`; // 품번 표시
             postDetail.innerHTML = `
                 <video src="${postData.media[0].url}" class="post-video" controls></video> <!-- 중앙에 비디오 -->
                 <div class="image-gallery">
@@ -36,6 +43,24 @@ async function loadPostDetail() {
                     <p>추가 내용: ${postData.additionalContent}</p>
                 </div>
             `;
+
+            // 관리자일 경우 수정하기 버튼 보이기
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    const uid = user.uid;
+                    const docRef = doc(db, "users", uid);
+                    getDoc(docRef).then((docSnap) => {
+                        if (docSnap.exists()) {
+                            const userRole = docSnap.data().role;
+                            if (userRole === 'admin') {
+                                document.getElementById('editBtn').style.display = 'block'; // 관리자에게만 수정하기 버튼 표시
+                            }
+                        }
+                    }).catch((error) => {
+                        console.error("역할 확인 오류:", error);
+                    });
+                }
+            });
 
             // 이미지 클릭 시 모달 열기
             document.querySelectorAll('.gallery-image').forEach(image => {
