@@ -1,4 +1,4 @@
-import { auth, db, storage } from "./firebase.js";
+import { db, storage } from "./firebase.js";  // auth 제거
 import { getDoc, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
