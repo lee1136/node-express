@@ -98,12 +98,3 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
         console.error("로그아웃 오류:", error.message);
     });
 });
-
-// 버튼 클릭 시 이동
-document.getElementById('uploadBtn').addEventListener('click', () => {
-    window.location.href = '/upload.html';  // 업로드 페이지로 이동
-});
-
-document.getElementById('signupBtn').addEventListener('click', () => {
-    window.location.href = '/signup.html';  // 회원가입 페이지로 이동
-});
