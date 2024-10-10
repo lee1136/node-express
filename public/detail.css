@@ -178,13 +178,10 @@ h1:hover {
 
 /* 이미지 이름 중앙 배치 */
 #caption {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     text-align: center;
-    color: white;
-    font-size: 18px;
-    background-color: rgba(0, 0, 0, 0.5);  /* 반투명한 배경 */
+    color: #ccc;
+    padding: 10px 0;
+    height: 30px;
     padding: 10px;
     transition: opacity 0.3s ease;
 }
