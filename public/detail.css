@@ -4,8 +4,13 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    -webkit-touch-callout: none;  /* iOS long-press context menu 방지 */
+    -webkit-user-select: none;    /* 텍스트 선택 방지 */
+    -ms-user-select: none;        /* IE 텍스트 선택 방지 */
+    user-select: none;            /* 텍스트 선택 방지 */
 }
 
+/* 헤더 스타일 */
 header {
     background-color: #0047ab;
     color: white;
@@ -24,6 +29,7 @@ h1 {
     padding-left: 20px;
 }
 
+/* 버튼 스타일 */
 .button-container {
     display: flex;
     flex-direction: column;
@@ -44,6 +50,7 @@ h1 {
     background-color: #003580;
 }
 
+/* 상세 페이지 컨텐츠 */
 #postDetail {
     display: flex;
     flex-direction: column;
@@ -51,6 +58,7 @@ h1 {
     padding: 20px;
 }
 
+/* 비디오 스타일 */
 .post-video {
     width: 100%;
     max-width: 700px;  /* 동영상 최대 크기 */
@@ -58,6 +66,7 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* 게시물 정보 스타일 */
 .post-info {
     background-color: white;
     padding: 20px;
@@ -91,6 +100,8 @@ h1 {
     object-fit: cover;  /* 이미지를 정사각형으로 자르지 않고 꽉 채움 */
     border-radius: 5px;
     cursor: pointer;
+    pointer-events: none;  /* 이미지 클릭 및 드래그 방지 */
+    -webkit-user-drag: none;  /* Webkit 기반 브라우저에서 드래그 방지 */
 }
 
 /* 모달 스타일 */
@@ -113,6 +124,7 @@ h1 {
     max-width: 700px;
 }
 
+/* 모달 닫기 버튼 스타일 */
 .close {
     position: absolute;
     top: 20px;
