@@ -22,7 +22,7 @@
             <!-- 파일 선택 필드 -->
             <div class="full-width">
                 <label for="fileInput">파일 선택:</label>
-                <input type="file" id="fileInput" multiple accept="image/*,video/*" required>
+                <input type="file" id="fileInput" multiple accept="image/*,video/*">
             </div>
 
             <!-- 회사명 및 품번 필드 한 줄에 배치 -->
@@ -47,10 +47,10 @@
                 </select>
             </div>
 
-            <!-- 사이즈 필드 (required 제거) -->
+            <!-- 사이즈 필드 추가 -->
             <div class="half-width">
                 <label for="size">사이즈:</label>
-                <input type="number" id="size" step="0.01">
+                <input type="number" id="size" step="0.01" placeholder="사이즈" >
                 <select id="sizeUnit">
                     <option value="cm">cm</option>
                     <option value="호">호</option>
@@ -76,6 +76,12 @@
             </div>
         </form>
     </section>
+
+    <!-- 로딩창 추가 -->
+    <div id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>업로드 중...</p>
+    </div>
 
     <script src="firebase.js" type="module"></script>
     <script src="upload.js" type="module"></script>
