@@ -10,83 +10,47 @@ body {
     height: 100vh;
 }
 
-/* 헤더 스타일 */
-header {
-    background-color: #0047ab;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-h1 {
-    margin: 0;
-    font-size: 24px;
-}
-
-/* 회원가입 페이지 섹션 스타일 */
-#registerSection {
-    display: flex;
-    justify-content: space-between;
-    padding: 80px 20px 20px; /* 헤더 아래쪽 여백 추가 */
-    width: 80%;
-    max-width: 1000px;
+/* 회원가입 폼을 감싸는 틀 */
+.container {
     background-color: white;
+    padding: 40px;
     border-radius: 10px;
+    border: 2px solid #0047ab;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-/* 회원 목록 스타일 (왼쪽) */
-.user-list {
-    flex: 1;
-    padding: 20px;
-    border-right: 2px solid #ccc;
-    max-width: 300px;
-    overflow-y: auto;
-    height: 300px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.user-list div {
-    margin-bottom: 10px;
+/* 제목 스타일 */
+h1 {
+    color: #0047ab;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 
-/* 회원 목록의 텍스트 스타일 */
-.user-list p {
-    margin: 0;
-    padding: 5px;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-/* 폼 컨테이너 스타일 (오른쪽) */
-.form-container {
-    flex: 2;
-    padding: 20px;
-    background-color: white;
-}
-
-/* 폼 레이아웃 */
+/* 입력 필드 레이아웃 */
 form {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
-    margin: 0 auto;
+    margin-bottom: 20px;
 }
 
-/* 폼 입력 필드 스타일 */
+/* 레이블 스타일 */
 label {
-    margin-bottom: 5px;
     font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #333;
 }
 
+/* 입력 필드 스타일 */
 input, select {
     padding: 10px;
     margin-bottom: 20px;
@@ -99,6 +63,7 @@ input, select {
 input:focus, select:focus {
     border-color: #0047ab;
     box-shadow: 0 0 5px rgba(0, 71, 171, 0.5);
+    outline: none;
 }
 
 /* 버튼 스타일 */
@@ -118,22 +83,44 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* 반응형 디자인 */
+/* 모바일 반응형 디자인 */
 @media (max-width: 768px) {
-    #registerSection {
-        flex-direction: column;
-        padding: 60px 10px 10px;
+    .container {
+        padding: 20px;
+        width: 90%;
     }
 
-    .user-list {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-        border-right: none;
-        border-bottom: 2px solid #ccc;
+    h1 {
+        font-size: 20px;
     }
 
-    .form-container {
-        max-width: 100%;
+    input, select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    input, select {
+        font-size: 12px;
+        padding: 7px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 8px;
     }
 }
