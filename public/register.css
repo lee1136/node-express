@@ -10,47 +10,63 @@ body {
     height: 100vh;
 }
 
-/* 회원가입 폼을 감싸는 틀 */
-.container {
+/* 회원가입 페이지 섹션 스타일 */
+#registerSection {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
     background-color: white;
-    padding: 40px;
     border-radius: 10px;
-    border: 2px solid #0047ab;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
+}
+
+/* 회원 목록 스타일 (왼쪽) */
+.user-list {
+    flex: 1;
+    padding: 20px;
+    border-right: 2px solid #ccc;
+    max-width: 300px;
+    overflow-y: auto;
+    height: 400px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.user-list h3 {
+    margin-bottom: 10px;
     text-align: center;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+.user-list p {
+    margin: 0;
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
-/* 제목 스타일 */
-h1 {
-    color: #0047ab;
-    margin-bottom: 20px;
-    font-size: 24px;
+/* 폼 컨테이너 스타일 (오른쪽) */
+.form-container {
+    flex: 2;
+    padding: 20px;
 }
 
-/* 입력 필드 레이아웃 */
+/* 폼 레이아웃 */
 form {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
-/* 레이블 스타일 */
 label {
-    font-size: 14px;
     margin-bottom: 5px;
-    text-align: left;
-    color: #333;
+    font-size: 14px;
 }
 
-/* 입력 필드 스타일 */
 input, select {
     padding: 10px;
     margin-bottom: 20px;
@@ -63,10 +79,8 @@ input, select {
 input:focus, select:focus {
     border-color: #0047ab;
     box-shadow: 0 0 5px rgba(0, 71, 171, 0.5);
-    outline: none;
 }
 
-/* 버튼 스타일 */
 button {
     background-color: #0047ab;
     color: white;
@@ -83,25 +97,22 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* 모바일 반응형 디자인 */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-    .container {
-        padding: 20px;
-        width: 90%;
+    #registerSection {
+        flex-direction: column;
     }
 
-    h1 {
-        font-size: 20px;
+    .user-list {
+        max-width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
     }
 
-    input, select {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    button {
-        font-size: 14px;
-        padding: 10px;
+    .form-container {
+        max-width: 100%;
     }
 }
 
