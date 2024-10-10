@@ -1,31 +1,6 @@
 import { db } from "./firebase.js";
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 우클릭(컨텍스트 메뉴) 비활성화
-document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-});
-
-// PrintScreen, Ctrl+S, Ctrl+P 등의 단축키 방지
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'PrintScreen') {
-        alert("캡처는 허용되지 않습니다!");
-        e.preventDefault();
-    }
-    
-    // Ctrl+S (저장 방지)
-    if ((e.ctrlKey && e.key === 's') || (e.ctrlKey && e.key === 'S')) {
-        alert("페이지 저장이 허용되지 않습니다.");
-        e.preventDefault();
-    }
-
-    // Ctrl+P (인쇄 방지)
-    if ((e.ctrlKey && e.key === 'p') || (e.ctrlKey && e.key === 'P')) {
-        alert("페이지 인쇄가 허용되지 않습니다.");
-        e.preventDefault();
-    }
-});
-
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
     window.location.href = '/dashboard.html';  // 홈(dashboard.html)으로 이동
@@ -56,17 +31,20 @@ async function loadPostDetail() {
             // 품번 및 회사명 표시
             document.getElementById('productNumber').innerText = `No. ${companyName}${postData.productNumber}`;
 
-            // 상세 정보 표시 (비디오 무한 반복 및 자동 재생, 재생바 없음)
+            // 사이즈가 없을 때 공백으로 처리
+            const sizeText = postData.size ? postData.size : "";  // 사이즈가 없으면 빈 문자열 처리
+
+            // 상세 정보 표시 (비디오 무한 반복 및 자동 재생)
             postDetail.innerHTML = `
-                <video src="${postData.media[0].url}" class="post-video" autoplay loop muted></video> <!-- 재생바 제거 -->
+                <video src="${postData.media[0].url}" class="post-video" controls autoplay loop muted></video> <!-- 중앙에 비디오, 무한 반복 -->
                 <div class="image-gallery">
                     ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
                 <div class="post-info">
                     <h2>${companyName}${postData.productNumber}</h2>
                     <p>종류: ${postData.type}</p>
+                    <p>사이즈: ${sizeText}</p> <!-- 사이즈가 없으면 공백 처리 -->
                     <p>중량: ${postData.weight}</p>
-                    <p>사이즈: ${postData.size}</p>
                     <p>추가 내용: ${postData.additionalContent}</p>
                 </div>
             `;
