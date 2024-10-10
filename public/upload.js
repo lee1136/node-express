@@ -55,7 +55,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     const companyName = document.getElementById('companyName').value || '';  // 회사명 생략 가능
     const productNumber = document.getElementById('productNumber').value;  // 품번 입력 필드
     const type = document.getElementById('type').value;
-    let size = document.getElementById('size').value;
+    const size = document.getElementById('size').value;
     const sizeUnit = document.getElementById('sizeUnit').value;
     const weight = document.getElementById('weight').value;
     const additionalContent = document.getElementById('additionalContent').value;
@@ -68,9 +68,6 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         console.error('로그인된 사용자 정보가 없습니다.');
         return;
     }
-
-    // 사이즈가 입력되지 않으면 null로 설정
-    size = size ? `${size} ${sizeUnit}` : null;
 
     // 파일 업로드 처리
     Array.from(files).forEach(file => {
@@ -87,18 +84,27 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     Promise.all(uploadPromises).then(mediaFiles => {
         const thumbnailURL = mediaFiles.find(media => media.fileName === selectedThumbnail.name)?.url || mediaFiles[0].url;
         const postId = `post_${Date.now()}`;
-        setDoc(doc(db, "posts", postId), {
+        
+        // Firestore에 저장할 데이터 구성
+        const postData = {
             companyName,  // 회사명 저장
             productNumber,  // 품번 저장
             type,
-            ...(size && { size }),  // 사이즈가 있을 때만 저장
             weight: `${weight}g`,
             additionalContent,
             media: mediaFiles,  // 미디어 파일 배열
             thumbnail: thumbnailURL,  // 선택한 썸네일 URL 저장
             createdAt: new Date(),
             createdBy: userId  // 세션에서 가져온 사용자 ID로 저장
-        }).then(() => {
+        };
+
+        // 사이즈가 입력되었을 경우만 추가
+        if (size) {
+            postData.size = `${size} ${sizeUnit}`;
+        }
+
+        // Firestore에 데이터 저장
+        setDoc(doc(db, "posts", postId), postData).then(() => {
             console.log("게시물이 저장되었습니다.");
             window.location.href = '/dashboard.html';  // 업로드 완료 후 대시보드로 이동
         }).catch(error => {
