@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 사용자 목록을 로드하고 화면에 표시하는 함수
 async function loadAllUsers() {
@@ -11,14 +11,18 @@ async function loadAllUsers() {
     }
 
     try {
-        const querySnapshot = await getDocs(collection(db, 'users'));
+        // 가입 시간(createdAt)을 기준으로 회원 목록을 정렬하여 불러오기
+        const q = query(collection(db, 'users'), orderBy('createdAt', 'asc'));
+        const querySnapshot = await getDocs(q);
+
         let userInfoHTML = '<h3>모든 회원 정보</h3>';
+        let userNo = 1;
 
         querySnapshot.forEach((doc) => {
             const userData = doc.data();
             userInfoHTML += `
                 <div>
-                    <p>아이디: ${userData.email}</p>
+                    <p>No. ${userNo} - 아이디: ${userData.email}</p>
                     <label for="role-${doc.id}">역할:</label>
                     <select id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
@@ -29,6 +33,7 @@ async function loadAllUsers() {
                     <hr>
                 </div>
             `;
+            userNo++;
         });
 
         allUsersInfoDiv.innerHTML = userInfoHTML;
@@ -87,11 +92,12 @@ if (registerForm) {
         const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
 
         try {
-            // Firestore에 사용자 정보 저장
+            // Firestore에 사용자 정보 저장 (가입 시간 포함)
             await setDoc(doc(db, 'users', userId), {
                 email: userId,
-                password: password,
-                role: role  // 선택한 역할 저장
+                password: password,  // 비밀번호는 해시화하여 저장해야 보안에 안전함 (현재 단순 저장)
+                role: role,           // 선택한 역할 저장
+                createdAt: serverTimestamp()  // 서버에서 생성된 타임스탬프 저장
             });
 
             alert('회원가입이 완료되었습니다.');
