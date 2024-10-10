@@ -53,7 +53,7 @@ body {
 
 /* 역할 선택 창 및 버튼 스타일 조정 */
 .updateRoleBtn, .deleteUserBtn, .role-select {
-    padding: 5px 10px;  /* 버튼 크기 줄이기 */
+    padding: 5px 8px;  /* 버튼 크기 줄이기 */
     font-size: 12px;    /* 텍스트 크기 줄이기 */
     margin-right: 5px;  /* 간격 좁게 */
     margin-top: 5px;    /* 간격 추가 */
@@ -61,17 +61,18 @@ body {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    width: 50px; /* 너비를 반으로 줄임 */
 }
 
+/* 역할 선택 창 너비 */
 .role-select {
-    width: 100px; /* 역할 선택 창의 너비 고정 */
+    width: 60px; /* 역할 선택 창 너비 줄이기 */
 }
 
 /* 역할 수정 버튼 스타일 */
 .updateRoleBtn {
     background-color: #f9a825;
     color: white;
-    width: 70px; /* 역할 수정 버튼 너비 */
 }
 
 .updateRoleBtn:hover {
@@ -82,7 +83,6 @@ body {
 .deleteUserBtn {
     background-color: #d32f2f;
     color: white;
-    width: 70px; /* 탈퇴 버튼 너비 */
 }
 
 .deleteUserBtn:hover {
