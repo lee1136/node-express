@@ -27,9 +27,9 @@ input[type="text"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 200px;
+    width: 150px;  /* 검색 창의 너비를 줄임 */
     margin-left: 20px;
-    flex-grow: 2;
+    flex-grow: 0;  /* 너비를 고정, 더 이상 늘어나지 않도록 */
 }
 
 button {
