@@ -1,6 +1,31 @@
 import { db } from "./firebase.js";
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+// 우클릭(컨텍스트 메뉴) 비활성화
+document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+});
+
+// PrintScreen, Ctrl+S, Ctrl+P 등의 단축키 방지
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'PrintScreen') {
+        alert("캡처는 허용되지 않습니다!");
+        e.preventDefault();
+    }
+    
+    // Ctrl+S (저장 방지)
+    if ((e.ctrlKey && e.key === 's') || (e.ctrlKey && e.key === 'S')) {
+        alert("페이지 저장이 허용되지 않습니다.");
+        e.preventDefault();
+    }
+
+    // Ctrl+P (인쇄 방지)
+    if ((e.ctrlKey && e.key === 'p') || (e.ctrlKey && e.key === 'P')) {
+        alert("페이지 인쇄가 허용되지 않습니다.");
+        e.preventDefault();
+    }
+});
+
 // 뒤로 가기 버튼 클릭 시 대시보드로 이동
 document.getElementById('backBtn').addEventListener('click', () => {
     window.location.href = '/dashboard.html';  // 홈(dashboard.html)으로 이동
