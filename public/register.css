@@ -13,29 +13,55 @@ body {
 /* 회원가입 페이지 섹션 스타일 */
 #registerSection {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     padding: 20px;
     width: 90%;
-    max-width: 500px;
+    max-width: 1200px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
 }
 
-/* 폼 컨테이너 중앙에 배치 */
+/* 회원 목록 (데스크탑에서는 왼쪽) */
+.user-list {
+    flex: 1;
+    padding: 20px;
+    border-right: 2px solid #ccc;
+    max-width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-right: 20px; /* 데스크탑에서의 간격 */
+}
+
+.user-list h3 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.user-list p {
+    margin: 0;
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* 회원가입 폼 (중앙에 배치) */
 .form-container {
-    width: 100%;
+    flex: 2;
     padding: 20px;
     text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 /* 폼 레이아웃 */
 form {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
-    margin: 0 auto;
 }
 
 label {
@@ -76,37 +102,25 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* 회원 목록을 폼 아래로 배치 */
-.user-list {
-    margin-top: 20px;
-    width: 100%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-.user-list h3 {
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.user-list p {
-    margin: 0;
-    padding: 5px;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-/* 반응형 디자인 */
+/* 모바일에서 회원 목록을 폼 아래로 배치 */
 @media (max-width: 768px) {
     #registerSection {
-        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
-    .form-container, .user-list {
+    .user-list {
+        order: 2;
         width: 100%;
+        margin-right: 0;
+        margin-top: 20px;
+        border-right: none;
+        border-top: 2px solid #ccc;
+    }
+
+    .form-container {
+        order: 1;
         max-width: 100%;
     }
 }
