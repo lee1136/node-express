@@ -1,94 +1,134 @@
-/* 전체 페이지 스타일 */
+/* 기본 페이지 스타일 */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f4f8;
+    background-color: #f9f9f9;
 }
 
-/* 로그인 및 회원가입 컨테이너 */
-.container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+/* 헤더 스타일 */
+header {
+    background-color: #0047ab;
+    color: white;
+    padding: 20px;
     text-align: center;
 }
 
-/* 제목 */
 h1 {
-    margin-bottom: 20px;
-    color: #0047ab;
+    margin: 0;
 }
 
-/* 폼 필드 스타일 */
+/* 전체 섹션 스타일 */
+#registerSection {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+/* 회원 목록을 화면 왼쪽에 배치 */
+.user-list {
+    flex: 1;
+    padding: 20px;
+    border-right: 2px solid #ccc;
+    max-width: 300px;
+}
+
+.user-list div {
+    margin-bottom: 10px;
+}
+
+/* 회원 목록의 텍스트 스타일 */
+.user-list p {
+    margin: 0;
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.user-list select {
+    margin: 10px 0;
+    padding: 5px;
+}
+
+/* 회원가입 폼을 오른쪽에 배치 */
+.form-container {
+    flex: 2;
+    padding: 20px;
+}
+
+/* 폼 레이아웃 */
 form {
     display: flex;
     flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 label {
     margin-bottom: 5px;
     font-size: 14px;
-    color: #333;
-    text-align: left;
 }
 
-input {
-    padding: 12px;
-    margin-bottom: 15px;
+input, select {
+    padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
 }
 
-/* 로그인 및 회원가입 버튼 스타일 */
-.button {
+button {
     background-color: #0047ab;
     color: white;
+    padding: 10px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
-    padding: 10px;
-    height: 60px;  /* 버튼의 높이 */
-    vertical-align: top; /* 텍스트를 위로 배치 */
-    text-align: left; /* 텍스트를 왼쪽 정렬 */
-    padding-top: 5px; /* 텍스트와 버튼 상단 간격 */
+    font-size: 16px;
 }
 
-.button:hover {
+button:hover {
     background-color: #003580;
 }
 
-/* 포커스된 입력 필드 스타일 */
-input:focus {
-    border-color: #0047ab;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 71, 171, 0.2);
+/* 역할 및 탈퇴 버튼 스타일 */
+.updateRoleBtn, .deleteUserBtn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: #f9a825;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
 }
 
-/* 하단의 작은 텍스트 링크 (회원가입/로그인 이동 링크 등) */
-.small-text {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #666;
+.updateRoleBtn:hover {
+    background-color: #f57f17;
 }
 
-/* 하단 텍스트 링크 스타일 */
-.small-text a {
-    color: #0047ab;
-    text-decoration: none;
+.deleteUserBtn {
+    background-color: #d32f2f;
 }
 
-.small-text a:hover {
-    text-decoration: underline;
+.deleteUserBtn:hover {
+    background-color: #b71c1c;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    #registerSection {
+        flex-direction: column;
+    }
+
+    .user-list {
+        border-right: none;
+        border-bottom: 2px solid #ccc;
+        max-width: 100%;
+    }
+
+    .form-container {
+        max-width: 100%;
+        padding: 10px;
+    }
 }
