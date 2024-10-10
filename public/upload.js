@@ -55,7 +55,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     const companyName = document.getElementById('companyName').value || '';  // 회사명 생략 가능
     const productNumber = document.getElementById('productNumber').value;  // 품번 입력 필드
     const type = document.getElementById('type').value;
-    const size = document.getElementById('size').value;
+    let size = document.getElementById('size').value;
     const sizeUnit = document.getElementById('sizeUnit').value;
     const weight = document.getElementById('weight').value;
     const additionalContent = document.getElementById('additionalContent').value;
@@ -68,6 +68,9 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         console.error('로그인된 사용자 정보가 없습니다.');
         return;
     }
+
+    // 사이즈가 입력되지 않으면 null로 설정
+    size = size ? `${size} ${sizeUnit}` : null;
 
     // 파일 업로드 처리
     Array.from(files).forEach(file => {
@@ -88,7 +91,7 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
             companyName,  // 회사명 저장
             productNumber,  // 품번 저장
             type,
-            size: `${size} ${sizeUnit}`,
+            ...(size && { size }),  // 사이즈가 있을 때만 저장
             weight: `${weight}g`,
             additionalContent,
             media: mediaFiles,  // 미디어 파일 배열
