@@ -10,13 +10,45 @@ header {
     background-color: #0047ab;
     color: white;
     padding: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 h1 {
     margin: 0;
+    font-size: 24px;
+    flex-grow: 1;
+    text-align: left;
 }
 
+input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+    margin-left: 20px;
+    flex-grow: 2;
+}
+
+button {
+    background-color: #0047ab;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #003580;
+}
+
+/* 게시물 목록 스타일 */
 #postList {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px 크기, 최대 가로에 맞게 반복 */
@@ -47,6 +79,25 @@ h1 {
 }
 
 /* 반응형 조정 */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    button {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
 @media (min-width: 300px) {
     #postList {
         grid-template-columns: repeat(2, 1fr);  /* 최소 2개 */
@@ -63,19 +114,4 @@ h1 {
     #postList {
         grid-template-columns: repeat(6, 1fr);  /* 큰 화면에서 최대 6개 */
     }
-}
-
-button {
-    background-color: #0047ab;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #003580;
 }
