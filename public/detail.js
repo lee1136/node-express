@@ -8,10 +8,12 @@ document.getElementById('backBtn').addEventListener('click', () => {
 
 // 우클릭(컨텍스트 메뉴) 비활성화
 document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
+    e.preventDefault();  // 우클릭 방지
 });
+
 // PrintScreen, Ctrl+S, Ctrl+P 등의 단축키 방지
 document.addEventListener('keydown', function (e) {
+    // PrintScreen 방지
     if (e.key === 'PrintScreen') {
         alert("캡처는 허용되지 않습니다!");
         e.preventDefault();
@@ -22,13 +24,13 @@ document.addEventListener('keydown', function (e) {
         alert("페이지 저장이 허용되지 않습니다.");
         e.preventDefault();
     }
+
     // Ctrl+P (인쇄 방지)
     if ((e.ctrlKey && e.key === 'p') || (e.ctrlKey && e.key === 'P')) {
         alert("페이지 인쇄가 허용되지 않습니다.");
         e.preventDefault();
     }
 });
-
 
 // 수정하기 버튼 클릭 시 수정 페이지로 이동
 document.getElementById('editBtn').addEventListener('click', () => {
@@ -62,7 +64,7 @@ async function loadPostDetail() {
             postDetail.innerHTML = `
                 <video src="${postData.media[0].url}" class="post-video" autoplay loop muted></video> <!-- 재생바 제거 -->
                 <div class="image-gallery">
-                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
+                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image" draggable="false">`).join('')}
                 </div>
                 <div class="post-info">
                     <h2>${companyName}${postData.productNumber}</h2>
