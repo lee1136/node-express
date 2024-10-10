@@ -19,15 +19,21 @@ header {
 
 h1 {
     margin: 0;
+    font-size: 24px;
     flex-grow: 1;
     text-align: left;
     padding-left: 20px;
+    transition: color 0.3s ease;  /* 제목 애니메이션 */
+}
+
+h1:hover {
+    color: #ffdd57;  /* 마우스 오버 시 텍스트 색상 변경 */
 }
 
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;  /* 버튼 간 간격 */
+    gap: 10px;
 }
 
 #backBtn, #editBtn {
@@ -38,10 +44,12 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;  /* 버튼 애니메이션 */
 }
 
 #backBtn:hover, #editBtn:hover {
     background-color: #003580;
+    transform: scale(1.05);  /* 마우스 오버 시 버튼 확대 */
 }
 
 #postDetail {
@@ -49,13 +57,29 @@ h1 {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;  /* 페이지 로드 시 페이드 인 효과 */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .post-video {
     width: 100%;
-    max-width: 700px;  /* 동영상 최대 크기 */
+    max-width: 700px;
     border-radius: 10px;
     margin-bottom: 20px;
+    transition: transform 0.3s ease;  /* 동영상 확대 효과 */
+}
+
+.post-video:hover {
+    transform: scale(1.05);  /* 마우스 오버 시 동영상 확대 */
 }
 
 .post-info {
@@ -64,34 +88,51 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 700px;  /* 정보 영역 최대 폭 */
+    max-width: 700px;
+    transition: transform 0.3s ease;  /* 정보 영역에 애니메이션 추가 */
+}
+
+.post-info:hover {
+    transform: scale(1.03);  /* 마우스 오버 시 정보 영역 확대 */
 }
 
 .post-info h2 {
     margin: 0;
     margin-bottom: 10px;
+    transition: color 0.3s ease;  /* 텍스트 색상 변경 애니메이션 */
 }
 
 .post-info p {
     margin: 5px 0;
     font-size: 16px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.post-info p:hover {
+    color: #0047ab;  /* 마우스 오버 시 텍스트 색상 변경 */
 }
 
 /* 이미지 갤러리 스타일 */
 .image-gallery {
     display: flex;
-    flex-wrap: wrap;  /* 줄이 넘어갈 경우 자동으로 줄바꿈 */
-    justify-content: center;  /* 이미지 중앙 정렬 */
-    gap: 10px;  /* 이미지 간격 */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .image-gallery img {
-    width: 150px;  /* 정사각형 고정 크기 */
-    height: 150px; /* 정사각형 고정 크기 */
-    object-fit: cover;  /* 이미지를 정사각형으로 자르지 않고 꽉 채움 */
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
     border-radius: 5px;
     cursor: pointer;
-    pointer-events: none;  /* 이미지 저장 방지 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* 이미지 애니메이션 추가 */
+}
+
+.image-gallery img:hover {
+    transform: scale(1.1);  /* 이미지 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* 그림자 효과 추가 */
 }
 
 /* 모달 스타일 */
@@ -105,6 +146,17 @@ h1 {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    animation: fadeInModal 0.5s forwards;
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
@@ -112,13 +164,11 @@ h1 {
     display: block;
     width: 80%;
     max-width: 700px;
+    transition: transform 0.3s ease;  /* 모달 이미지에 애니메이션 추가 */
 }
 
-#caption {
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-    height: 30px;
+.modal-content:hover {
+    transform: scale(1.05);  /* 이미지 확대 효과 */
 }
 
 .close {
@@ -131,7 +181,15 @@ h1 {
     cursor: pointer;
 }
 
-/* 이미지 저장 방지 (드래그 방지) */
-img {
-    pointer-events: none;  /* 드래그를 막기 위해 이미지 이벤트 차단 */
+/* 모달 배경 클릭 시 닫힘 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    z-index: 998;
+    transition: opacity 0.3s ease;
 }
