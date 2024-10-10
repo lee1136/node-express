@@ -82,20 +82,20 @@ async function loadAllUsers() {
     }
 }
 
-// 회원가입 처리 및 중복 이메일 처리
+// 회원가입 처리 및 중복 아이디 처리
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const userId = document.getElementById('userId').value;
+        const userId = document.getElementById('userId').value;  // 사용자 아이디
         const password = document.getElementById('password').value;
         const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
 
         try {
-            // Firestore에 사용자 정보 저장 (가입 시간 포함)
+            // Firestore에 사용자 정보 저장 (userId와 password)
             await setDoc(doc(db, 'users', userId), {
-                email: userId,
-                password: password,  // 비밀번호는 해시화하여 저장해야 보안에 안전함 (현재 단순 저장)
+                userId: userId,  // 사용자 아이디 저장
+                password: password,  // 비밀번호 저장
                 role: role,           // 선택한 역할 저장
                 createdAt: serverTimestamp()  // 서버에서 생성된 타임스탬프 저장
             });
@@ -114,12 +114,12 @@ const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const userId = document.getElementById('userId').value;
+        const userId = document.getElementById('userId').value;  // 사용자 아이디로 로그인
         const password = document.getElementById('password').value;
 
         try {
             // Firestore에서 사용자 정보 확인
-            const docRef = doc(db, 'users', userId);
+            const docRef = doc(db, 'users', userId);  // userId 기반으로 찾음
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
