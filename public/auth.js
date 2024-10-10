@@ -20,16 +20,17 @@ async function loadAllUsers() {
 
         querySnapshot.forEach((doc) => {
             const userData = doc.data();
+            console.log(userData);  // 데이터 확인용
             userInfoHTML += `
                 <div>
-                    <p>No. ${userNo} - 아이디: ${userData.email}</p>
+                    <p>No. ${userNo} - 아이디: ${userData.userId || doc.id}</p> <!-- userId 또는 문서 ID 표시 -->
                     <label for="role-${doc.id}">역할:</label>
                     <select id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
                     <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.userId || doc.id}">탈퇴</button>
                     <hr>
                 </div>
             `;
