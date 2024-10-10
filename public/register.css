@@ -61,18 +61,18 @@ body {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    width: 50px; /* 너비를 반으로 줄임 */
 }
 
-/* 역할 선택 창 너비 */
+/* 역할 선택 창 너비 조정 (2분의 1 크기) */
 .role-select {
-    width: 60px; /* 역할 선택 창 너비 줄이기 */
+    width: 50%; /* 역할 선택 창 너비를 절반으로 축소 */
 }
 
 /* 역할 수정 버튼 스타일 */
 .updateRoleBtn {
     background-color: #f9a825;
     color: white;
+    width: 70px;
 }
 
 .updateRoleBtn:hover {
@@ -83,6 +83,7 @@ body {
 .deleteUserBtn {
     background-color: #d32f2f;
     color: white;
+    width: 70px;
 }
 
 .deleteUserBtn:hover {
@@ -177,3 +178,4 @@ button:hover {
         padding: 10px;
     }
 }
+
