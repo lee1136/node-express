@@ -8,7 +8,9 @@ document.getElementById('backBtn').addEventListener('click', () => {
 
 // 우클릭(컨텍스트 메뉴) 비활성화
 document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();  // 우클릭 방지
+    if (e.target.tagName === 'IMG') {  // 이미지만 우클릭 방지
+        e.preventDefault();  // 우클릭 방지
+    }
 });
 
 // PrintScreen, Ctrl+S, Ctrl+P 등의 단축키 방지
@@ -64,7 +66,7 @@ async function loadPostDetail() {
             postDetail.innerHTML = `
                 <video src="${postData.media[0].url}" class="post-video" autoplay loop muted></video> <!-- 재생바 제거 -->
                 <div class="image-gallery">
-                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image" draggable="false">`).join('')}
+                    ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
                 <div class="post-info">
                     <h2>${companyName}${postData.productNumber}</h2>
@@ -93,8 +95,9 @@ async function loadPostDetail() {
                 console.error('로그인된 사용자 정보가 없습니다.');
             }
 
-            // 이미지 클릭 시 모달 열기
+            // 이미지 클릭 시 모달 열기 (이미지 저장 방지는 유지, 클릭은 가능하게)
             document.querySelectorAll('.gallery-image').forEach(image => {
+                image.style.pointerEvents = 'auto';  // 이미지 클릭 가능하게 설정
                 image.addEventListener('click', () => {
                     openModal(image.src, `${companyName}${postData.productNumber}`);
                 });
