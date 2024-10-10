@@ -120,9 +120,16 @@ function openModal(imageSrc, productNumber) {
     modal.style.display = "block"; // 모달 표시
     modalImage.src = imageSrc; // 모달 안의 이미지 소스 설정
     captionText.innerHTML = productNumber; // 캡션 설정
+
+    // 모달 창 바깥쪽을 클릭하면 모달 닫기
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 }
 
-// 모달 닫기
+// 모달 닫기 (X 버튼 클릭 시)
 document.querySelector('.close').addEventListener('click', () => {
     document.getElementById('imageModal').style.display = "none"; // 모달 숨기기
 });
