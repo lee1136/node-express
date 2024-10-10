@@ -22,7 +22,7 @@
             <!-- 파일 선택 필드 -->
             <div class="full-width">
                 <label for="fileInput">파일 선택:</label>
-                <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                <input type="file" id="fileInput" multiple accept="image/*,video/*" required>
             </div>
 
             <!-- 회사명 및 품번 필드 한 줄에 배치 -->
@@ -47,11 +47,11 @@
                 </select>
             </div>
 
-            <!-- 사이즈 필드 -->
+            <!-- 사이즈 필드 (required 제거) -->
             <div class="half-width">
                 <label for="size">사이즈:</label>
-                <input type="number" id="size" step="0.01" required>
-                <select id="sizeUnit" required>
+                <input type="number" id="size" step="0.01">
+                <select id="sizeUnit">
                     <option value="cm">cm</option>
                     <option value="호">호</option>
                 </select>
