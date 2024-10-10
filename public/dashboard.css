@@ -128,10 +128,17 @@ button:hover {
         margin: 10px 0;
     }
 
+    /* 모바일에서 버튼들을 가로로 배치 */
     #buttonContainer {
         display: flex;
         justify-content: space-between;
         width: 100%;
+        gap: 10px;
+    }
+
+    #uploadBtn, #signupBtn {
+        flex: 1;
+        width: 100%; /* 버튼들을 전체 넓이에 맞춰줌 */
     }
 
     #logoutBtn {
