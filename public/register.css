@@ -20,7 +20,7 @@ body {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    flex-wrap: nowrap;  /* 항상 좌우 배치 유지 */
+    flex-wrap: nowrap;
 }
 
 /* 회원 목록 스타일 (왼쪽) */
@@ -98,38 +98,25 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* 모바일에서도 좌우 레이아웃 유지 */
+/* 모바일에서 회원 목록을 폼 아래로 배치 */
 @media (max-width: 768px) {
-    #registerSection {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .user-list {
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 20px;
-        height: auto;
-        flex-basis: 100%;
-    }
-
-    .form-container {
-        width: 100%;
-        max-width: 100%;
-        flex-basis: 100%;
-    }
-}
-
-@media (max-width: 480px) {
     #registerSection {
         flex-direction: column;
     }
 
-    .user-list, .form-container {
+    .form-container, .user-list {
         width: 100%;
         max-width: none;
     }
 
+    .user-list {
+        margin-top: 20px;
+        border-right: none;
+        border-top: 2px solid #ccc;
+    }
+}
+
+@media (max-width: 480px) {
     input, select {
         font-size: 14px;
         padding: 8px;
