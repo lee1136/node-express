@@ -65,8 +65,8 @@ async function loadPostDetail() {
                 <div class="post-info">
                     <h2>${companyName}${postData.productNumber}</h2>
                     <p>종류: ${postData.type}</p>
-                    <p>사이즈: ${postData.size}</p>
                     <p>중량: ${postData.weight}</p>
+                    <p>사이즈: ${postData.size}</p>
                     <p>추가 내용: ${postData.additionalContent}</p>
                 </div>
             `;
