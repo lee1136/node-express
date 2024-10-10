@@ -75,11 +75,7 @@ h1:hover {
     max-width: 700px;
     border-radius: 10px;
     margin-bottom: 20px;
-    transition: transform 0.3s ease;  /* 동영상 확대 효과 */
-}
-
-.post-video:hover {
-    transform: scale(1.05);  /* 마우스 오버 시 동영상 확대 */
+    /* 동영상에 마우스 오버 애니메이션 제거 */
 }
 
 .post-info {
