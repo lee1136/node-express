@@ -27,9 +27,14 @@ input[type="text"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 150px;  /* 검색 창의 너비를 줄임 */
+    width: 150px;
     margin-left: 20px;
-    flex-grow: 0;  /* 너비를 고정, 더 이상 늘어나지 않도록 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* 애니메이션 추가 */
+}
+
+input[type="text"]:focus {
+    border-color: #0047ab;
+    box-shadow: 0 0 5px rgba(0, 71, 171, 0.5);  /* 포커스 시 부드럽게 변환 */
 }
 
 button {
@@ -41,28 +46,28 @@ button {
     cursor: pointer;
     font-size: 16px;
     margin-left: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 버튼에 애니메이션 추가 */
 }
 
 button:hover {
     background-color: #003580;
+    transform: scale(1.05);  /* 마우스 오버 시 확대 효과 부드럽게 */
 }
 
-/* 게시물 목록 스타일 */
 #postList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* 최소 150px 크기, 최대 가로에 맞게 반복 */
-    grid-gap: 10px;  /* 게시물 사이의 간격 */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    grid-gap: 10px; 
     padding: 20px;
 }
 
 .post {
     position: relative;
     cursor: pointer;
-    padding-top: 100%;  /* 정사각형 비율 유지 */
+    padding-top: 100%;  
     background-color: #f1f1f1;
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* 부드러운 확대/축소 및 그림자 */
 }
 
 .post img {
@@ -71,11 +76,17 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;  /* 이미지가 정사각형을 꽉 채우도록 설정 */
+    object-fit: cover;
+    transition: transform 0.3s ease;  /* 이미지에도 부드러운 애니메이션 추가 */
 }
 
 .post:hover {
-    transform: scale(1.05);  /* 마우스 오버 시 확대 효과 */
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);  /* 마우스 오버 시 그림자와 확대 효과 */
+}
+
+.post img:hover {
+    transform: scale(1.1);  /* 이미지가 좀 더 확대되도록 추가 애니메이션 */
 }
 
 /* 반응형 조정 */
@@ -100,18 +111,18 @@ button:hover {
 
 @media (min-width: 300px) {
     #postList {
-        grid-template-columns: repeat(2, 1fr);  /* 최소 2개 */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }
 
 @media (min-width: 768px) {
     #postList {
-        grid-template-columns: repeat(4, 1fr);  /* 중간 크기에서 4개 */
+        grid-template-columns: repeat(4, 1fr); 
     }
 }
 
 @media (min-width: 1200px) {
     #postList {
-        grid-template-columns: repeat(6, 1fr);  /* 큰 화면에서 최대 6개 */
+        grid-template-columns: repeat(6, 1fr); 
     }
 }
