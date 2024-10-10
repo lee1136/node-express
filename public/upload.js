@@ -69,7 +69,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         return;
     }
 
-    // 로딩창 표시
+    // 로딩창 표시 (업로드 시작 시에만)
     document.getElementById('loadingOverlay').style.display = 'flex';
 
     // 파일 업로드 처리
@@ -114,7 +114,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     }).catch(error => {
         console.error("게시물 저장 중 오류:", error);
     }).finally(() => {
-        // 로딩창 숨기기
+        // 로딩창 숨기기 (업로드 완료 후)
         document.getElementById('loadingOverlay').style.display = 'none';
     });
 });
