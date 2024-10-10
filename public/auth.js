@@ -93,16 +93,25 @@ if (registerForm) {
         const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
 
         try {
-            // Firestore에 사용자 정보 저장 (userId와 password)
-            await setDoc(doc(db, 'users', userId), {
-                userId: userId,  // 사용자 아이디 저장
-                password: password,  // 비밀번호 저장
-                role: role,           // 선택한 역할 저장
-                createdAt: serverTimestamp()  // 서버에서 생성된 타임스탬프 저장
-            });
+            // Firestore에서 중복 아이디 확인
+            const userRef = doc(db, 'users', userId);
+            const userSnap = await getDoc(userRef);
 
-            alert('회원가입이 완료되었습니다.');
-            window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
+            if (userSnap.exists()) {
+                // 이미 같은 아이디가 있을 경우
+                alert('이미 존재하는 아이디입니다. 다른 아이디를 선택하세요.');
+            } else {
+                // Firestore에 사용자 정보 저장 (중복되지 않은 경우)
+                await setDoc(doc(db, 'users', userId), {
+                    userId: userId,  // 사용자 아이디 저장
+                    password: password,  // 비밀번호 저장
+                    role: role,           // 선택한 역할 저장
+                    createdAt: new Date() // 생성일 저장
+                });
+
+                alert('회원가입이 완료되었습니다.');
+                window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
+            }
         } catch (error) {
             console.error('회원가입 오류:', error);
             alert('회원가입 실패: ' + error.message);
