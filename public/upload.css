@@ -133,7 +133,7 @@ button:hover {
 
 /* 로딩창 스타일 */
 #loadingOverlay {
-    display: none;  /* 기본으로 숨김 */
+    display: none;  /* 기본적으로 숨김 */
     position: fixed;
     top: 0;
     left: 0;
