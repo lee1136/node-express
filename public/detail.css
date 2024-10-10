@@ -75,7 +75,6 @@ h1:hover {
     max-width: 700px;
     border-radius: 10px;
     margin-bottom: 20px;
-    /* 동영상에 마우스 오버 애니메이션 제거 */
 }
 
 .post-info {
@@ -175,6 +174,19 @@ h1:hover {
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* 이미지 이름 중앙 배치 */
+#caption {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    background-color: rgba(0, 0, 0, 0.5);  /* 반투명한 배경 */
+    padding: 10px;
+    transition: opacity 0.3s ease;
 }
 
 /* 모달 배경 클릭 시 닫힘 */
