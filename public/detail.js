@@ -6,6 +6,30 @@ document.getElementById('backBtn').addEventListener('click', () => {
     window.location.href = '/dashboard.html';  // 홈(dashboard.html)으로 이동
 });
 
+// 우클릭(컨텍스트 메뉴) 비활성화
+document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+});
+// PrintScreen, Ctrl+S, Ctrl+P 등의 단축키 방지
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'PrintScreen') {
+        alert("캡처는 허용되지 않습니다!");
+        e.preventDefault();
+    }
+    
+    // Ctrl+S (저장 방지)
+    if ((e.ctrlKey && e.key === 's') || (e.ctrlKey && e.key === 'S')) {
+        alert("페이지 저장이 허용되지 않습니다.");
+        e.preventDefault();
+    }
+    // Ctrl+P (인쇄 방지)
+    if ((e.ctrlKey && e.key === 'p') || (e.ctrlKey && e.key === 'P')) {
+        alert("페이지 인쇄가 허용되지 않습니다.");
+        e.preventDefault();
+    }
+});
+
+
 // 수정하기 버튼 클릭 시 수정 페이지로 이동
 document.getElementById('editBtn').addEventListener('click', () => {
     window.location.href = `/edit.html?postId=${postId}`; // 수정 페이지로 이동, postId를 쿼리 파라미터로 전달
@@ -36,7 +60,7 @@ async function loadPostDetail() {
 
             // 상세 정보 표시 (비디오 무한 반복 및 자동 재생)
             postDetail.innerHTML = `
-                <video src="${postData.media[0].url}" class="post-video" controls autoplay loop muted></video> <!-- 중앙에 비디오, 무한 반복 -->
+                <video src="${postData.media[0].url}" class="post-video" autoplay loop muted></video> <!-- 재생바 제거 -->
                 <div class="image-gallery">
                     ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
