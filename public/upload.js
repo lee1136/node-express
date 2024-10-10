@@ -1,4 +1,4 @@
-import { db, storage } from "./firebase.js";  // auth 제거
+import { db, storage } from "./firebase.js";  // Firebase imports
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
@@ -49,7 +49,7 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 });
 
 // 파일 업로드 및 Firestore에 게시물 저장
-document.getElementById('uploadForm').addEventListener('submit', (e) => {
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const companyName = document.getElementById('companyName').value || '';  // 회사명 생략 가능
@@ -62,12 +62,15 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
     const files = document.getElementById('fileInput').files;
     const uploadPromises = [];
 
-    // 사용자 ID는 세션 스토리지에서 가져오기 (auth 대신)
+    // 사용자 ID는 세션 스토리지에서 가져오기
     const userId = sessionStorage.getItem('userId');
     if (!userId) {
         console.error('로그인된 사용자 정보가 없습니다.');
         return;
     }
+
+    // 로딩창 표시
+    document.getElementById('loadingOverlay').style.display = 'flex';
 
     // 파일 업로드 처리
     Array.from(files).forEach(file => {
@@ -104,13 +107,14 @@ document.getElementById('uploadForm').addEventListener('submit', (e) => {
         }
 
         // Firestore에 데이터 저장
-        setDoc(doc(db, "posts", postId), postData).then(() => {
-            console.log("게시물이 저장되었습니다.");
-            window.location.href = '/dashboard.html';  // 업로드 완료 후 대시보드로 이동
-        }).catch(error => {
-            console.error("게시물 저장 중 오류:", error);
-        });
+        return setDoc(doc(db, "posts", postId), postData);
+    }).then(() => {
+        console.log("게시물이 저장되었습니다.");
+        window.location.href = '/dashboard.html';  // 업로드 완료 후 대시보드로 이동
     }).catch(error => {
-        console.error("파일 업로드 오류:", error);
+        console.error("게시물 저장 중 오류:", error);
+    }).finally(() => {
+        // 로딩창 숨기기
+        document.getElementById('loadingOverlay').style.display = 'none';
     });
 });
