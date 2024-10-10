@@ -56,9 +56,9 @@ async function loadPostDetail() {
             // 품번 및 회사명 표시
             document.getElementById('productNumber').innerText = `No. ${companyName}${postData.productNumber}`;
 
-            // 상세 정보 표시 (비디오 무한 반복 및 자동 재생)
+            // 상세 정보 표시 (비디오 무한 반복 및 자동 재생, 재생바 없음)
             postDetail.innerHTML = `
-                <video src="${postData.media[0].url}" class="post-video" controls autoplay loop></video> <!-- 중앙에 비디오, 무한 반복 -->
+                <video src="${postData.media[0].url}" class="post-video" autoplay loop muted></video> <!-- 재생바 제거 -->
                 <div class="image-gallery">
                     ${postData.media.slice(1).map(media => `<img src="${media.url}" alt="${media.fileName}" class="gallery-image">`).join('')}
                 </div>
