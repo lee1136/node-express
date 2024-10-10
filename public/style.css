@@ -4,6 +4,10 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 헤더 스타일 */
@@ -12,6 +16,9 @@ header {
     color: white;
     padding: 20px;
     text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
 h1 {
@@ -21,8 +28,15 @@ h1 {
 /* 전체 섹션 스타일 */
 #registerSection {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 /* 회원 목록을 화면 왼쪽에 배치 */
@@ -31,10 +45,6 @@ h1 {
     padding: 20px;
     border-right: 2px solid #ccc;
     max-width: 300px;
-}
-
-.user-list div {
-    margin-bottom: 10px;
 }
 
 /* 회원 목록의 텍스트 스타일 */
@@ -46,14 +56,9 @@ h1 {
     font-size: 14px;
 }
 
-.user-list select {
-    margin: 10px 0;
-    padding: 5px;
-}
-
-/* 회원가입 폼을 오른쪽에 배치 */
+/* 회원가입 폼을 중앙에 배치 */
 .form-container {
-    flex: 2;
+    width: 100%;
     padding: 20px;
 }
 
@@ -61,8 +66,7 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
-    margin: 0 auto;
+    width: 100%;
 }
 
 label {
@@ -76,8 +80,15 @@ input, select {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
+input:focus, select:focus {
+    border-color: #0047ab;
+    box-shadow: 0 0 5px rgba(0, 71, 171, 0.5);
+}
+
+/* 버튼 스타일 */
 button {
     background-color: #0047ab;
     color: white;
@@ -86,10 +97,12 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
 button:hover {
     background-color: #003580;
+    transform: scale(1.05);
 }
 
 /* 역할 및 탈퇴 버튼 스타일 */
@@ -101,6 +114,7 @@ button:hover {
     border-radius: 5px;
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .updateRoleBtn:hover {
@@ -121,14 +135,8 @@ button:hover {
         flex-direction: column;
     }
 
-    .user-list {
-        border-right: none;
-        border-bottom: 2px solid #ccc;
-        max-width: 100%;
-    }
-
     .form-container {
-        max-width: 100%;
+        width: 100%;
         padding: 10px;
     }
 }
