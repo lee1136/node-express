@@ -20,6 +20,7 @@ body {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-wrap: nowrap;  /* 항상 좌우 배치 유지 */
 }
 
 /* 회원 목록 스타일 (왼쪽) */
@@ -106,20 +107,22 @@ button:hover {
 
     .user-list {
         width: 100%;
+        max-width: 100%;
         margin-bottom: 20px;
-        border-right: none;
-        border-bottom: 2px solid #ccc;
+        height: auto;
+        flex-basis: 100%;
     }
 
     .form-container {
         width: 100%;
+        max-width: 100%;
+        flex-basis: 100%;
     }
 }
 
 @media (max-width: 480px) {
     #registerSection {
         flex-direction: column;
-        align-items: center;
     }
 
     .user-list, .form-container {
