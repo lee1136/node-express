@@ -97,41 +97,43 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* 반응형 디자인 */
+/* 모바일에서도 좌우 레이아웃 유지 */
 @media (max-width: 768px) {
     #registerSection {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .user-list {
-        max-width: 100%;
-        height: auto;
+        width: 100%;
+        margin-bottom: 20px;
         border-right: none;
         border-bottom: 2px solid #ccc;
-        margin-bottom: 20px;
     }
 
     .form-container {
-        max-width: 100%;
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 15px;
+    #registerSection {
+        flex-direction: column;
+        align-items: center;
     }
 
-    h1 {
-        font-size: 18px;
+    .user-list, .form-container {
+        width: 100%;
+        max-width: none;
     }
 
     input, select {
-        font-size: 12px;
-        padding: 7px;
+        font-size: 14px;
+        padding: 8px;
     }
 
     button {
-        font-size: 12px;
-        padding: 8px;
+        font-size: 14px;
+        padding: 10px;
     }
 }
