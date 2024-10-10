@@ -10,8 +10,8 @@ body {
     background-color: #f0f4f8;
 }
 
-/* 로그인 컨테이너 */
-.login-container {
+/* 로그인 및 회원가입 컨테이너 */
+.container {
     background-color: white;
     padding: 40px;
     border-radius: 10px;
@@ -50,8 +50,8 @@ input {
     box-sizing: border-box;
 }
 
-/* 로그인 버튼 스타일 */
-.login-btn {
+/* 로그인 및 회원가입 버튼 스타일 */
+.button {
     background-color: #0047ab;
     color: white;
     border: none;
@@ -59,18 +59,36 @@ input {
     font-size: 16px;
     cursor: pointer;
     padding: 10px;
-    height: 60px;  /* 버튼의 높이를 설정 */
+    height: 60px;  /* 버튼의 높이 */
     vertical-align: top; /* 텍스트를 위로 배치 */
     text-align: left; /* 텍스트를 왼쪽 정렬 */
     padding-top: 5px; /* 텍스트와 버튼 상단 간격 */
 }
 
-.login-btn:hover {
+.button:hover {
     background-color: #003580;
 }
 
+/* 포커스된 입력 필드 스타일 */
 input:focus {
     border-color: #0047ab;
     outline: none;
     box-shadow: 0 0 5px rgba(0, 71, 171, 0.2);
+}
+
+/* 하단의 작은 텍스트 링크 (회원가입/로그인 이동 링크 등) */
+.small-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 하단 텍스트 링크 스타일 */
+.small-text a {
+    color: #0047ab;
+    text-decoration: none;
+}
+
+.small-text a:hover {
+    text-decoration: underline;
 }
