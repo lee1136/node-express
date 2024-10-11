@@ -21,27 +21,27 @@ async function loadAllUsers() {
             return dateB.seconds - dateA.seconds;  // 최신 순으로 정렬
         });
 
-        // 사용자 목록을 No.1이 가장 아래로 가도록 최신 가입자부터 나열
+         // 사용자 목록을 No.1이 가장 아래로 가도록 최신 가입자부터 나열
         users.forEach((doc, index) => {
             const userData = doc.data();
             const userNo = users.length - index;  // userNo를 계산하여 최신 사용자가 위로 정렬
 
             userInfoHTML += `
                 <div>
-                    <p>No.${userNo} - 아이디: ${userData.email}</p>
+                    <p>No.${userNo} - 아이디: ${userData.userId}</p>
                     <p>비밀번호: ${userData.password}</p>
                     <select class="role-select" id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
                     <button class="updateRoleBtn" data-user-id="${doc.id}">수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.userId}">탈퇴</button>
                 </div>
             `;
         });
 
         allUsersInfoDiv.innerHTML = userInfoHTML;
-
+        
         // 역할 수정 버튼 클릭 이벤트
         document.querySelectorAll('.updateRoleBtn').forEach(button => {
             button.addEventListener('click', async (e) => {
