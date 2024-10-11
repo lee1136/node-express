@@ -24,9 +24,11 @@ async function loadAllUsers() {
         // 사용자 목록을 No.1이 가장 아래로 가도록 최신 가입자부터 나열
         users.forEach((doc, index) => {
             const userData = doc.data();
+            const userNo = users.length - index;  // userNo를 계산하여 최신 사용자가 위로 정렬
+
             userInfoHTML += `
                 <div>
-                    <p>No. ${userNo} - 아이디: ${userData.userId || doc.id}</p> <!-- userId 또는 문서 ID 표시 -->
+                    <p>No.${userNo} - 아이디: ${userData.email}</p>
                     <p>비밀번호: ${userData.password}</p>
                     <select class="role-select" id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
@@ -37,7 +39,7 @@ async function loadAllUsers() {
                 </div>
             `;
         });
- 
+
         allUsersInfoDiv.innerHTML = userInfoHTML;
 
         // 역할 수정 버튼 클릭 이벤트
