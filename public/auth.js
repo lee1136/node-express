@@ -14,18 +14,19 @@ async function loadAllUsers() {
         const querySnapshot = await getDocs(collection(db, 'users'));
         let userInfoHTML = '<h3>회원 목록</h3>';
 
-        // 사용자를 가입 순서대로 정렬 (오래된 순)
+        // 사용자를 가입일 기준 내림차순으로 정렬 (최근 가입한 사용자가 위에 표시)
         const users = querySnapshot.docs.sort((a, b) => {
             const dateA = a.data().createdAt;
             const dateB = b.data().createdAt;
-            return dateA.seconds - dateB.seconds;  // 오래된 순으로 정렬
+            return dateB.seconds - dateA.seconds;  // 최신 순으로 정렬
         });
 
+        // 사용자 목록을 No.1이 가장 아래로 가도록 최신 가입자부터 나열
         users.forEach((doc, index) => {
             const userData = doc.data();
             userInfoHTML += `
                 <div>
-                    <p>No.${index + 1} - 아이디: ${userData.email}</p>
+                    <p>No. ${userNo} - 아이디: ${userData.userId || doc.id}</p> <!-- userId 또는 문서 ID 표시 -->
                     <p>비밀번호: ${userData.password}</p>
                     <select class="role-select" id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
@@ -36,7 +37,7 @@ async function loadAllUsers() {
                 </div>
             `;
         });
-
+ 
         allUsersInfoDiv.innerHTML = userInfoHTML;
 
         // 역할 수정 버튼 클릭 이벤트
