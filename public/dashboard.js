@@ -1,6 +1,5 @@
 import { db } from "./firebase.js"; // Authentication 없이 Firestore만 사용
-import { getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getDoc, doc, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 let postsData = [];  // 전체 게시물 데이터를 저장할 배열
 
@@ -43,13 +42,14 @@ function filterPosts(searchTerm) {
     renderPosts(filteredPosts);  // 필터링된 게시물만 렌더링
 }
 
-// Firestore에서 게시물 가져오기
+// Firestore에서 게시물 가져오기 (최신순으로 정렬)
 async function loadPosts() {
     const postList = document.getElementById('postList');
     postList.innerHTML = '';  // 게시물 목록 초기화
 
     try {
-        const querySnapshot = await getDocs(collection(db, 'posts'));
+        // 게시물 createdAt 기준으로 내림차순 정렬하여 가져오기
+        const querySnapshot = await getDocs(query(collection(db, 'posts'), orderBy('createdAt', 'desc')));
         postsData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
