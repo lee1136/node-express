@@ -11,8 +11,8 @@ async function loadAllUsers() {
     }
 
     try {
-        // 가입 시간(createdAt)을 기준으로 회원 목록을 정렬하여 불러오기
-        const q = query(collection(db, 'users'), orderBy('createdAt', 'asc'));
+        // 가입 시간(createdAt)을 기준으로 회원 목록을 최신순으로 정렬하여 불러오기
+        const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
 
         let userInfoHTML = '<h3>모든 회원 정보</h3>';
@@ -25,7 +25,7 @@ async function loadAllUsers() {
                 <div>
                     <p>No. ${userNo} - 아이디: ${userData.userId || doc.id}</p> <!-- userId 또는 문서 ID 표시 -->
                     <label for="role-${doc.id}">역할:</label>
-                    <select id="role-${doc.id}">
+                    <select id="role-${doc.id}" class="role-select">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
