@@ -14,7 +14,7 @@ async function loadAllUsers() {
         const querySnapshot = await getDocs(collection(db, 'users'));
         let userInfoHTML = '<h3>회원 목록</h3>';
 
-        // 사용자를 가입 순서대로 정렬
+        // 사용자를 가입 순서대로 정렬 (오래된 순)
         const users = querySnapshot.docs.sort((a, b) => {
             const dateA = a.data().createdAt;
             const dateB = b.data().createdAt;
@@ -26,6 +26,7 @@ async function loadAllUsers() {
             userInfoHTML += `
                 <div>
                     <p>No.${index + 1} - 아이디: ${userData.email}</p>
+                    <p>비밀번호: ${userData.password}</p>
                     <select class="role-select" id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
@@ -115,6 +116,47 @@ if (registerForm) {
             console.error('회원가입 오류:', error);
             alert('회원가입 실패: ' + error.message);
         }
+    });
+}
+
+// 로그인 처리
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userId = document.getElementById('userId').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            // Firestore에서 사용자 정보 확인
+            const docRef = doc(db, 'users', userId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                if (userData.password === password) {
+                    // 로그인 성공
+                    sessionStorage.setItem('userId', userId);  // 세션에 로그인 정보 저장
+                    window.location.href = '/dashboard.html';  // 로그인 후 대시보드로 이동
+                } else {
+                    alert('비밀번호가 잘못되었습니다.');
+                }
+            } else {
+                alert('사용자를 찾을 수 없습니다.');
+            }
+        } catch (error) {
+            console.error('로그인 오류:', error);
+            alert('로그인 실패: ' + error.message);
+        }
+    });
+}
+
+// 로그아웃 처리
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('userId');  // 세션에서 로그인 정보 제거
+        window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
     });
 }
 
