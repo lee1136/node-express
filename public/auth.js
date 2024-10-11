@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 사용자 목록을 로드하고 화면에 표시하는 함수
 async function loadAllUsers() {
@@ -11,30 +11,29 @@ async function loadAllUsers() {
     }
 
     try {
-        // 가입 시간(createdAt)을 기준으로 회원 목록을 최신순으로 정렬하여 불러오기
-        const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        let userInfoHTML = '<h3>회원 목록</h3>';
 
-        let userInfoHTML = '<h3>모든 회원 정보</h3>';
-        let userNo = 1;
+        // 사용자를 가입 순서대로 정렬
+        const users = querySnapshot.docs.sort((a, b) => {
+            const dateA = a.data().createdAt;
+            const dateB = b.data().createdAt;
+            return dateA.seconds - dateB.seconds;  // 오래된 순으로 정렬
+        });
 
-        querySnapshot.forEach((doc) => {
+        users.forEach((doc, index) => {
             const userData = doc.data();
-            console.log(userData);  // 데이터 확인용
             userInfoHTML += `
                 <div>
-                    <p>No. ${userNo} - 아이디: ${userData.userId || doc.id}</p> <!-- userId 또는 문서 ID 표시 -->
-                    <label for="role-${doc.id}">역할:</label>
-                    <select id="role-${doc.id}" class="role-select">
+                    <p>No.${index + 1} - 아이디: ${userData.email}</p>
+                    <select class="role-select" id="role-${doc.id}">
                         <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
                         <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
                     </select>
-                    <button class="updateRoleBtn" data-user-id="${doc.id}">역할 수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.userId || doc.id}">탈퇴</button>
-                    <hr>
+                    <button class="updateRoleBtn" data-user-id="${doc.id}">수정</button>
+                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.email}">탈퇴</button>
                 </div>
             `;
-            userNo++;
         });
 
         allUsersInfoDiv.innerHTML = userInfoHTML;
@@ -83,80 +82,39 @@ async function loadAllUsers() {
     }
 }
 
-// 회원가입 처리 및 중복 아이디 처리
+// 회원가입 처리 및 중복 아이디 확인
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const userId = document.getElementById('userId').value;  // 사용자 아이디
+        const userId = document.getElementById('userId').value;
         const password = document.getElementById('password').value;
-        const role = document.getElementById('role').value;  // 관리자 또는 일반회원 선택
+        const role = document.getElementById('role').value;
+
+        // 중복 아이디 확인
+        const userDocRef = doc(db, 'users', userId);
+        const userSnapshot = await getDoc(userDocRef);
+
+        if (userSnapshot.exists()) {
+            alert('이미 존재하는 아이디입니다.');
+            return;
+        }
 
         try {
-            // Firestore에서 중복 아이디 확인
-            const userRef = doc(db, 'users', userId);
-            const userSnap = await getDoc(userRef);
+            // Firestore에 사용자 정보 저장
+            await setDoc(doc(db, 'users', userId), {
+                email: userId,
+                password: password,
+                role: role,
+                createdAt: new Date() // 가입일 추가
+            });
 
-            if (userSnap.exists()) {
-                // 이미 같은 아이디가 있을 경우
-                alert('이미 존재하는 아이디입니다. 다른 아이디를 선택하세요.');
-            } else {
-                // Firestore에 사용자 정보 저장 (중복되지 않은 경우)
-                await setDoc(doc(db, 'users', userId), {
-                    userId: userId,  // 사용자 아이디 저장
-                    password: password,  // 비밀번호 저장
-                    role: role,           // 선택한 역할 저장
-                    createdAt: new Date() // 생성일 저장
-                });
-
-                alert('회원가입이 완료되었습니다.');
-                window.location.href = '/dashboard.html';  // 회원가입 후 대시보드로 이동
-            }
+            alert('회원가입이 완료되었습니다.');
+            loadAllUsers();  // 회원 목록 갱신
         } catch (error) {
             console.error('회원가입 오류:', error);
             alert('회원가입 실패: ' + error.message);
         }
-    });
-}
-
-// 로그인 처리
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const userId = document.getElementById('userId').value;  // 사용자 아이디로 로그인
-        const password = document.getElementById('password').value;
-
-        try {
-            // Firestore에서 사용자 정보 확인
-            const docRef = doc(db, 'users', userId);  // userId 기반으로 찾음
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                if (userData.password === password) {
-                    // 로그인 성공
-                    sessionStorage.setItem('userId', userId);  // 세션에 로그인 정보 저장
-                    window.location.href = '/dashboard.html';  // 로그인 후 대시보드로 이동
-                } else {
-                    alert('비밀번호가 잘못되었습니다.');
-                }
-            } else {
-                alert('사용자를 찾을 수 없습니다.');
-            }
-        } catch (error) {
-            console.error('로그인 오류:', error);
-            alert('로그인 실패: ' + error.message);
-        }
-    });
-}
-
-// 로그아웃 처리
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        sessionStorage.removeItem('userId');  // 세션에서 로그인 정보 제거
-        window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
     });
 }
 
