@@ -26,12 +26,6 @@ h1 {
     transition: color 0.3s ease;
 }
 
-/* 링크 기본 색상 */
-h1 a {
-    color: white; 
-    text-decoration: none; 
-}
-
 /* 검색창 스타일 */
 #searchInput {
     flex-grow: 2;
