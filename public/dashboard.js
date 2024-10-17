@@ -77,7 +77,7 @@ function createPostElement(postData) {
     postDiv.classList.add('post');
 
     let mediaElement;
-    
+    console.log(postData);
     // 썸네일이 MP4인지 확인
     if (postData.thumbnail && postData.thumbnail.endsWith('.mp4')) {
         // 비디오 요소 생성
