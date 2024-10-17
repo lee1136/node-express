@@ -76,7 +76,16 @@ function createPostElement(postData) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
-    const img = document.createElement('img');
+    let mediatype ;    // 썸네일이 MP4인지 확인
+    const cleanUrl = postData.thumbnail.split('?')[0]; 
+    const fileName = cleanUrl.split('/').pop();    
+    const fileExtension = fileName.split('.').pop().toLowerCase();  
+    if (fileExtension == 'mp4') {
+        mediatype = 'video';
+    } else {
+        mediatype = 'img';
+    }      
+    const img = document.createElement(mediatype); // 'img' 대신 ..
     img.src = postData.thumbnail || postData.media[0].url;  // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
     img.alt = postData.productNumber;
 
