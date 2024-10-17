@@ -81,7 +81,7 @@ function createPostElement(postData) {
     // 썸네일이 MP4인지 확인
     if (postData.thumbnail && postData.thumbnail.endsWith('.mp4')) {
         // 비디오 요소 생성
-        const img =   document.createElement('video');
+        const mediaElement =   document.createElement('video');
         mediaElement.src = postData.thumbnail;  // 비디오 소스 설정
         mediaElement.controls = true;           // 비디오 컨트롤러 추가
         mediaElement.alt = postData.productNumber;
