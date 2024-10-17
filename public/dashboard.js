@@ -76,6 +76,20 @@ function createPostElement(postData) {
     const postDiv = document.createElement('div');
     postDiv.classList.add('post');
 
+    let mediaElement;
+    
+    // 썸네일이 MP4인지 확인
+    if (postData.thumbnail && postData.thumbnail.endsWith('.mp4')) {
+        // 비디오 요소 생성
+        const img =   document.createElement('video');
+        mediaElement.src = postData.thumbnail;  // 비디오 소스 설정
+        mediaElement.controls = true;           // 비디오 컨트롤러 추가
+        mediaElement.alt = postData.productNumber;
+        mediaElement.classList.add('media-preview');  // 비디오 스타일 추가 (선택적)
+    } else {
+        // 이미지 요소 생성
+        const img = document.createElement('img');
+    }    
     const img = document.createElement('img');
     img.src = postData.thumbnail || postData.media[0].url;  // 썸네일이 있으면 썸네일 사용, 없으면 첫 번째 미디어 사용
     img.alt = postData.productNumber;
