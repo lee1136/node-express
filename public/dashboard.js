@@ -80,7 +80,8 @@ function createPostElement(postData) {
     console.log(postData);
     console.log(postData.thumbnail );
     // 썸네일이 MP4인지 확인
-    const fileName = postData.thumbnail.split('/').pop();    
+    const cleanUrl = postData.thumbnail.split('?')[0]; 
+    const fileName = cleanUrl.split('/').pop();    
     const fileExtension = fileName.split('.').pop().toLowerCase();
     if (fileExtension == 'mp4') {
         // 비디오 요소 생성
