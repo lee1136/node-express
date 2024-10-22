@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 
-const requestIp = require('request-ip');//접속ip
+
 const session = require('express-session'); // 세션 미들웨어 추가
 
 // Express 애플리케이션 생성
@@ -14,7 +14,6 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(requestIp.mw()); // IP 가져오기 미들웨어 사용
 app.use(express.json());// JSON 본문 파싱 미들웨어 추가
 // 인증된 사용자인지 확인하는 미들웨어
 const checkAuth = (req, res, next) => {
