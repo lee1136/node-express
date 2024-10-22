@@ -1,6 +1,17 @@
 import { db } from "./firebase.js";
 import { setDoc, doc, getDocs, collection, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+
+function formatTimestamp(timestamp) {
+    if (!timestamp) {
+        return 'N/A';  // timestamp가 null인 경우 기본값 반환
+    }
+    
+    const date = timestamp.toDate();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+}
+
+
 // 사용자 목록을 로드하고 화면에 표시하는 함수
 async function loadAllUsers() {
     const allUsersInfoDiv = document.getElementById('allUsersInfo');
@@ -26,16 +37,22 @@ async function loadAllUsers() {
             const userData = doc.data();
             const userNo = users.length - index;  // userNo를 계산하여 최신 사용자가 위로 정렬
 
+            const loginStrDate = formatTimestamp(userData.loginAt);
+            const createdStrDate = formatTimestamp(userData.createdAt);
+            
             userInfoHTML += `
-                <div>
-                    <p>No.${userNo} - 아이디: ${userData.userId}</p>
-                    <p>비밀번호: ${userData.password}</p>
-                    <select class="role-select" id="role-${doc.id}">
-                        <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
-                        <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
-                    </select>
-                    <button class="updateRoleBtn" data-user-id="${doc.id}">수정</button>
-                    <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.userId}">탈퇴</button>
+                <div class="user-info">
+                    <p>No.${userNo} - 아이디: ${userData.userId} 비밀번호: ${userData.password}</p>
+                    <p> 최종접속: ${loginStrDate}</p>
+                    <p>생성일 :${createdStrDate}</p>
+                    <div class="btn-group role-group">                    
+                        <select class="role-select" id="role-${doc.id}">
+                            <option value="member" ${userData.role === 'member' ? 'selected' : ''}>일반회원</option>
+                            <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>관리자</option>
+                        </select>                    
+                        <button class="updateRoleBtn" data-user-id="${doc.id}">수정</button>
+                        <button class="deleteUserBtn" data-user-id="${doc.id}" data-email="${userData.userId}">탈퇴</button>
+                    </div>
                 </div>
             `;
         });
@@ -107,10 +124,11 @@ if (registerForm) {
         try {
             // Firestore에 사용자 정보 저장
             await setDoc(doc(db, 'users', userId), {
-                email: userId,
+                userId: userId,
                 password: password,
                 role: role,
-                createdAt: new Date() // 가입일 추가
+                createdAt: new Date(), // 가입일 추가
+                loginAt:null
             });
 
             alert('회원가입이 완료되었습니다.');
@@ -140,7 +158,56 @@ if (loginForm) {
                 if (userData.password === password) {
                     // 로그인 성공
                     sessionStorage.setItem('userId', userId);  // 세션에 로그인 정보 저장
-                    window.location.href = '/dashboard.html';  // 로그인 후 대시보드로 이동
+
+                    await updateDoc(doc(db, 'users', userId), {
+                        loginAt: new Date()
+                    });
+                    // 서버에 IP 주소 요청
+                    const ipResponse = await fetch('/api/handle-request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ action: 'getClientIp' }) // action에 getClientIp 지정
+                    });
+                                                                               
+                    const ipData = await ipResponse.json();
+                    const userIp = ipData.ip; // 사용자의 IP 주소
+                    console.log(userIp);
+                    // Firestore에 저장할 데이터 구성
+                    const viewsData = {                        
+                        userId: userId,            
+                        viewedAt: new Date(), // 현재 시간
+                        ip: ipData.ip
+                    };                    
+                    const docRef = doc(collection(db, 'loginlogs')); // loginlogs 컬렉션에서 자동 생성 ID를 사용
+                    await setDoc(docRef, viewsData);
+  
+
+                    // 서버에 userId를 POST 요청으로 전송
+                    fetch('/api/handle-request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            action : 'login', // action에 setUserId 지정
+                            userId : userId , // userId를 JSON 형식으로 전송
+                            role : userData.role
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/dashboard';  // 로그인 후 대시보드로 이동
+                        } else {
+                            console.error('Failed to set userId on server.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+
+
+
+                    //window.location.href = '/dashboard';  // 로그인 후 대시보드로 이동
                 } else {
                     alert('비밀번호가 잘못되었습니다.');
                 }
@@ -154,14 +221,6 @@ if (loginForm) {
     });
 }
 
-// 로그아웃 처리
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        sessionStorage.removeItem('userId');  // 세션에서 로그인 정보 제거
-        window.location.href = '/login.html';  // 로그아웃 후 로그인 페이지로 이동
-    });
-}
 
 // 페이지가 로드되면 모든 회원 정보를 가져옴 (관리자용 페이지일 때)
 document.addEventListener('DOMContentLoaded', async () => {

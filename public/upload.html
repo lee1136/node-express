@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시물 업로드</title>
+    <title>상품 업로드</title>
+    <link rel="stylesheet" href="common.css">     
     <link rel="stylesheet" href="upload.css">
 </head>
 <body>
     <header>
-        <h1>게시물 업로드</h1>
-        <button id="backBtn">뒤로 가기</button>
-    </header>
+        <h1><a href="./">e-Books</a></h1>               
+        <section id="categoryTabs">
+           <button id="logoutBtn" class="active">로그아웃</button>  
+        </section>      
+    </header>    
 
-    <section id="uploadSection">
+    <section id="uploadSection">        
         <form id="uploadForm">
+            <h2 id="edit-title">상품 업로드</h2>
             <!-- 미디어 미리보기 -->
             <div id="mediaPreview" class="media-preview">
                 <!-- 미리보기가 여기에 표시됩니다 -->
@@ -25,20 +29,34 @@
                 <input type="file" id="fileInput" multiple accept="image/*,video/*">
             </div>
 
-            <!-- 회사명 및 품번 필드 한 줄에 배치 -->
+            <!-- 카테고리 -->
             <div class="half-width">
-                <label for="companyName">회사명(영문):</label>
+                <label for="category">분류 : </label>
+                <select id="category" required>
+                    <option value="ring">반지</option>
+                    <option value="necklace">목걸이</option>
+                    <option value="bracelet">팔찌</option>
+                    <option value="earring">귀걸이</option>
+                </select>
+                <label for="groupId"> 그룹 : </label>
+                <input type="text" id="groupId" placeholder="그룹" >                
+            </div>
+            <!-- 회사명 및 품번 필드 한 줄에 배치 -->
+            
+            <div class="half-width">
+                <label for="companyName">회사명(영문) : </label>
                 <input type="text" id="companyName" placeholder="영문">
             </div>
 
             <div class="half-width">
-                <label for="productNumber">품번:</label>
+                <label for="productNumber">품번 : </label>
                 <input type="text" id="productNumber" placeholder="품번" required>
             </div>
+              
 
             <!-- 종류 필드 -->
             <div class="half-width">
-                <label for="type">종류:</label>
+                <label for="type">종류 : </label>
                 <select id="type" required>
                     <option value="14K">14K</option>
                     <option value="18K">18K</option>
@@ -49,8 +67,8 @@
 
             <!-- 사이즈 필드 추가 -->
             <div class="half-width">
-                <label for="size">사이즈:</label>
-                <input type="number" id="size" step="0.01" placeholder="사이즈" >
+                <label for="size">사이즈 : </label>
+                <input type="number" id="size"  min="0.01" step="0.01" placeholder="사이즈" >
                 <select id="sizeUnit">
                     <option value="cm">cm</option>
                     <option value="호">호</option>
@@ -59,8 +77,8 @@
 
             <!-- 중량 필드 -->
             <div class="half-width">
-                <label for="weight">중량:</label>
-                <input type="number" id="weight" step="0.01" required>
+                <label for="weight">중량 : </label>
+                <input type="number" id="weight"  min="0.01" step="0.01" >
                 <span>g</span> <!-- g 단위 표시 -->
             </div>
 
@@ -70,8 +88,11 @@
                 <textarea id="additionalContent" rows="4"></textarea>
             </div>
 
+        
+
             <!-- 업로드 버튼 -->
-            <div class="full-width">
+            <div class="full-width btn-group">
+                <button type="button" id="cancelBtn" onclick="window.history.back();">취 소</button>
                 <button type="submit" id="submitBtn">업로드</button>
             </div>
         </form>
@@ -83,7 +104,7 @@
     <p>업로드 중...</p>
 </div>
 
-    <script src="firebase.js" type="module"></script>
     <script src="upload.js" type="module"></script>
+    <script src="common.js" type="module"></script>    
 </body>
 </html>

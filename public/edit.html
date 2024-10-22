@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시물 수정</title>
+    <link rel="stylesheet" href="common.css">   
     <link rel="stylesheet" href="edit.css">
 </head>
 <body>
     <header>
-        <h1>게시물 수정</h1>
-        <button id="backBtn">뒤로 가기</button>
-    </header>
+        <h1><a href="./">e-Books</a></h1>               
+        <section id="categoryTabs">
+           <button id="logoutBtn" class="active">로그아웃</button>  
+        </section>      
+    </header>   
 
     <section id="editSection">
         <form id="editForm">
             <!-- 미디어 수정 섹션 -->
+            <h2 id="edit-title">상품 수정</h2>
             <div class="full-width">
                 <label for="fileInput">미디어 수정:</label>
                 <input type="file" id="fileInput" multiple accept="image/*,video/*">
@@ -23,15 +27,36 @@
                 </div>
             </div>
 
+
+            <!-- 카테고리 -->
+            <div class="half-width">
+                <label for="category">분류 : </label>
+                <select id="category" required>
+                    <option value="ring">반지</option>
+                    <option value="necklace">목걸이</option>
+                    <option value="bracelet">팔찌</option>
+                    <option value="earring">귀걸이</option>
+                </select>
+                <label for="groupId"> 그룹 : </label>
+                <input type="text" id="groupId" placeholder="그룹" >                              
+            </div>
+            <div class="half-width">
+                <label for="companyName">회사명(영문) :</label>
+                <input type="text" id="companyName" placeholder="영문">
+                <label for="orders">순서 :</label>
+                <input type="number" id="orders" placeholder="숫자" min="1" > 
+                <input type="number" id="oldOrders" style="display: none;">
+            </div>            
+                
             <!-- 품번 입력 -->
             <div class="half-width">
-                <label for="productNumber">품번:</label>
+                <label for="productNumber">품번 : </label>
                 <input type="text" id="productNumber" required>
             </div>
 
             <!-- 종류 선택 -->
             <div class="half-width">
-                <label for="type">종류:</label>
+                <label for="type">종류 : </label>
                 <select id="type" required>
                     <option value="14K">14K</option>
                     <option value="18K">18K</option>
@@ -42,8 +67,8 @@
 
             <!-- 사이즈 입력 -->
             <div class="half-width">
-                <label for="size">사이즈:</label>
-                <input type="number" id="size" step="0.01" required>
+                <label for="size">사이즈 : </label>
+                <input type="number" id="size" step="0.01">
                 <select id="sizeUnit" required>
                     <option value="cm">cm</option>
                     <option value="호">호</option>
@@ -52,24 +77,27 @@
 
             <!-- 중량 입력 -->
             <div class="half-width">
-                <label for="weight">중량:</label>
-                <input type="number" id="weight" step="0.01" required>
+                <label for="weight">중량 : </label>
+                <input type="number" id="weight" step="0.01" >
                 <span>g</span>
             </div>
 
             <!-- 추가 내용 입력 -->
+            
             <div class="full-width">
                 <label for="additionalContent">추가 내용:</label>
                 <textarea id="additionalContent" rows="4"></textarea>
             </div>
 
             <!-- 수정 완료 및 게시물 삭제 버튼 -->
-            <button type="submit" id="submitBtn">수정 완료</button>
-            <button type="button" id="deleteBtn">게시물 삭제</button>
+            <div class="full-width btn-group">
+                <button type="button" id="cancelBtn" onclick="window.history.back();">취 소</button>
+                <button type="submit" id="submitBtn">수정 완료</button>
+                <button type="button" id="deleteBtn">게시물 삭제</button>
+            </div>
         </form>
     </section>
-
-    <script src="firebase.js" type="module"></script>
-    <script src="edit.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="edit.js" type="module"></script>   
 </body>
 </html>

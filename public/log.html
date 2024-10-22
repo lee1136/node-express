@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Books</title>    
+    <link rel="stylesheet" href="common.css">
+    
+</head>
+<body>    
+    <header>
+        <h1><a href="./">e-Books</a></h1>
+        <div id="buttonContainer" class="dashboard">
+            <button id="uploadBtn" style="display: none;" class="active">업로드</button> <!-- 관리자만 표시 -->
+            <button id="signupBtn" style="display: none;" class="active">회원관리</button> <!-- 관리자만 표시 -->   
+            <button id="logsBtn" style="display: none;" class="active"><a href="./log">로그</a></button>  
+            <button id="resetOdersBtn" style="display: none;" class="active">상품순서리셋</button>  
+            <input type="text" id="searchInput" placeholder="검색..."> <!-- 검색 입력 필드 -->         
+        </div>
+                   
+        <section id="categoryTabs">    
+            <button id="logoutBtn" class="active">로그아웃</button>  
+        </section>      
+        
+             
+        
+             
+
+    </header>
+    
+    <section class="bg_opacity bg-table" >
+        <div class="table-wrap">
+            <h3>로그인기록</h3>
+            <div id="pagination"></div>
+            <table id="logList">
+            <!-- 로그 목록이 여기에 렌더링됩니다 -->
+            </table>
+        </div>
+    </section>
+
+   
+
+    <script src="log.js" type="module"></script>
+    <script src="common.js" type="module"></script>    
+</body>
+</html>
